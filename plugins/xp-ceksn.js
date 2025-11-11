@@ -1,8 +1,8 @@
 import { createHash } from 'crypto'
 
-let handler = async function(m) {
-    let sn = createHash('md5').update(m.sender).digest('hex')
-    m.reply(`*SN:* ${sn}`)
+let handler = async function (m) {
+	let sn = createHash('md5').update(m.sender).digest('hex')
+	m.reply(`*SN:* ${sn}`)
 }
 
 handler.help = ['ceksn']

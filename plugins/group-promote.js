@@ -1,9 +1,8 @@
 let handler = async (m, { args, text, participants }) => {
-    const user = m.quoted ? m.quoted.sender : m.mentionedJid && m.mentionedJid[0] ? m.mentionedJid[0] : text ? text.replace(/[^0-9]/g, '') + '@s.whatsapp.net' : '';
-    if (!user) return m.reply('Reply / tag yang ingin di promote');
-    if (participants.filter(v => v.jid == user || v.id === user || v.phoneNumber === user).length == 0) return m.reply('Target tidak berada dalam Grup !')
-    conn.groupParticipantsUpdate(m.chat, [user], 'promote')
-        .then(_ => m.reply('Berhasil'))
+	const user = m.quoted ? m.quoted.sender : m.mentionedJid && m.mentionedJid[0] ? m.mentionedJid[0] : text ? text.replace(/[^0-9]/g, '') + '@s.whatsapp.net' : ''
+	if (!user) return m.reply('Reply / tag yang ingin di promote')
+	if (participants.filter((v) => v.jid == user || v.id === user || v.phoneNumber === user).length == 0) return m.reply('Target tidak berada dalam Grup !')
+	conn.groupParticipantsUpdate(m.chat, [user], 'promote').then((_) => m.reply('Berhasil'))
 }
 handler.help = ['promote']
 handler.tags = ['group']

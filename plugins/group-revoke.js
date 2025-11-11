@@ -1,5 +1,5 @@
 let handler = async (m) => {
-    m.reply('Berhasil Reset linkgc\n\nLink : https://chat.whatsapp.com/' + await conn.groupRevokeInvite(m.chat))
+	m.reply('Berhasil Reset linkgc\n\nLink : https://chat.whatsapp.com/' + (await conn.groupRevokeInvite(m.chat)))
 }
 handler.help = ['revoke']
 handler.tags = ['group']

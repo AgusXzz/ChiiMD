@@ -10,7 +10,8 @@
   },
   "scripts": {
     "test": "node test.js",
-    "start": "node index.js"
+    "start": "node index.js",
+    "prettier": "prettier --write ."
   },
   "author": "AgusXzz",
   "homepage": "https://github.com/AgusXzz/ChiiMD#readme",
@@ -36,8 +37,7 @@
   "license": "ISC",
   "dependencies": {
     "awesome-phonenumber": "^2.68.0",
-    "axios": "^1.6.0",
-    "baileys": "^7.0.0-rc.6",
+    "baileys": "^6.7.21",
     "chalk": "^5.0.0",
     "cheerio": "^1.1.2",
     "file-type": "^17.1.1",
@@ -46,5 +46,8 @@
     "moment-timezone": "^0.5.33",
     "node-webpmux": "^3.2.1",
     "syntax-error": "^1.4.0"
+  },
+  "devDependencies": {
+    "prettier": "^3.6.2"
   }
 }
