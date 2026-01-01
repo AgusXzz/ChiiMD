@@ -2,11 +2,11 @@ import { watchFile, unwatchFile } from 'fs';
 import chalk from 'chalk';
 import { fileURLToPath } from 'url';
 
-global.pairingNumber = 6285955111472;
-global.owner = [['6287701656619', 'Agus', true]];
+global.pairingNumber = 6285880489075;
+global.owner = [['628888175783', 'GharlyXI', true]];
 global.mods = [];
 
-global.namebot = 'ChiiBOT - MD';
+global.namebot = 'GluzzBotz - MD';
 global.author = 'Agus';
 
 global.wait = 'Loading...';
