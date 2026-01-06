@@ -33,7 +33,9 @@ export async function handler(chatUpdate) {
 		const isMods = isOwner || global.mods.map((v) => v.replace(/[^0-9]/g, '') + '@s.whatsapp.net').includes(m.sender);
 		const isPrems = isROwner || db.data.users[m.sender].premiumTime > 0;
 
-		if (!global.db.data.settings[this.user.jid].public && !isMods && !isOwner && !m.fromMe) return;
+		if (global.db.data.settings[this.user.jid].gconly && !m.isGroup && !isMods && !isPrems) return;
+		if (!global.db.data.settings[this.user.jid].public && !isMods && !m.fromMe) return;
+
 		if (m.isBaileys) return;
 		m.exp += Math.ceil(Math.random() * 10);
 
@@ -137,11 +139,9 @@ export async function handler(chatUpdate) {
 
 				if (!isAccept) continue;
 				m.plugin = name;
-				if (m.chat in global.db.data.chats || m.sender in global.db.data.users) {
+				if (!isOwner && (m.chat in global.db.data.chats || m.sender in global.db.data.users)) {
 					let chat = global.db.data.chats[m.chat];
-					let user = global.db.data.users[m.sender];
-					if (name != 'owner-unbanchat.js' && name != 'owner-exec.js' && name != 'owner-exec2.js' && name != 'tools-delete.js' && chat?.isBanned) return; // Except this
-					if (name != 'owner-unbanuser.js' && user?.banned) return;
+					if (name != 'tools-delete.js' && chat?.isBanned) return; // Except this
 				}
 				if (plugin.rowner && plugin.owner && !(isROwner || isOwner)) {
 					// Both Owner
@@ -425,7 +425,7 @@ global.dfail = (type, m, conn) => {
 		private: 'Private Chat - Command ini hanya bisa dipakai di private chat',
 		admin: 'Only Admin - Command ini hanya untuk admin grup',
 		botAdmin: 'Only Bot Admin - Command ini hanya bisa digunakan ketika bot menjadi admin',
-		unreg: 'Halo kak! 👋 Anda harus mendaftar ke database bot dulu sebelum menggunakan fitur ini',
+		unreg: 'Halo kak! 👋 Anda harus mendaftar ke database bot dulu sebelum menggunakan fitur ini\nCara daftarnya tulis .daftar Nama.umur',
 		restrict: 'Restrict - Fitur restrict belum diaktifkan di chat ini',
 	}[type];
 	if (msg) return conn.reply(m.chat, msg, m);

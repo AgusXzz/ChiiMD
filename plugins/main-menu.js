@@ -10,6 +10,7 @@ const handler = async (m, { conn, usedPrefix: _p, isOwner, args }) => {
 		database: 'Database Menu',
 		sticker: 'Sticker Menu',
 		tools: 'Tools Menu',
+		rpg: 'Rpg Menu',
 		fun: 'Fun Menu',
 		group: 'Group Menu',
 		xp: 'XP & Level Menu',

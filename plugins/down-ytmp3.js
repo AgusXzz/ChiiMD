@@ -1,9 +1,11 @@
 import axios from 'axios';
+import { delay } from 'baileys';
+import { toAudio } from '../lib/converter.js';
 
 let handler = async (m, { usedPrefix, command, text }) => {
 	if (!text) throw `Usage: ${usedPrefix + command} <YouTube Audio URL>`;
 	try {
-		const dl = await ytdlp('audio', text);
+		const dl = await ytdown(text, 'video');
 		const info = await getMetadata(text);
 		const sthumb = await conn.sendMessage(
 			m.chat,
@@ -21,18 +23,19 @@ let handler = async (m, { usedPrefix, command, text }) => {
 			},
 			{ quoted: m }
 		);
-
+		const { data, ext } = await conn.getFile(dl.download);
+		const audios = await toAudio(data, ext);
 		await conn.sendMessage(
 			m.chat,
 			{
-				audio: { url: dl },
+				audio: audios.data,
 				mimetype: 'audio/mpeg',
 				fileName: `${info.title}.mp3`,
 			},
 			{ quoted: sthumb }
 		);
 	} catch (e) {
-		m.reply(e.message);
+		return m.reply(e.message);
 	}
 };
 handler.help = ['ytmp3'];
@@ -42,25 +45,44 @@ handler.limit = true;
 
 export default handler;
 
-async function ytdlp(type = 'audio', videoUrl) {
-	const cmd = type === 'audio' ? '-x --audio-format mp3' : '-f 136+140';
-	const res = await axios.get(`https://ytdlp.online/stream?command=${encodeURIComponent(`${cmd} ${videoUrl}`)}`, {
-		responseType: 'stream',
-	});
+export async function ytdown(url, type = 'video') {
+	const { data } = await axios.post('https://ytdown.to/proxy.php', new URLSearchParams({ url }), { headers: { 'Content-Type': 'application/x-www-form-urlencoded' } });
 
-	let data = '';
-	for await (const chunk of res.data) data += chunk;
+	const api = data.api;
 
-	const match = data.match(/href="([^"]+\.(?:mp3|mp4|m4a|webm))"/);
-	if (!match) throw new Error('Link download tidak ditemukan');
+	const media = api.mediaItems.find((m) => m.type.toLowerCase() === type.toLowerCase());
 
-	return 'https://ytdlp.online' + match[1];
+	if (!media) throw new Error('Media type not found');
+
+	while (true) {
+		const { data: res } = await axios.get(media.mediaUrl);
+
+		if (res.error === 'METADATA_NOT_FOUND') throw new Error('Metadata not found');
+
+		if (res.percent === 'Completed' && res.fileUrl !== 'In Processing...') {
+			return {
+				info: {
+					title: api.title,
+					desc: api.description,
+					thumbnail: api.imagePreviewUrl,
+					views: api.mediaStats?.viewsCount,
+					uploader: api.userInfo?.name,
+					quality: media.mediaQuality,
+					duration: media.mediaDuration,
+					extension: media.mediaExtension,
+					size: media.mediaFileSize,
+				},
+				download: res.fileUrl,
+			};
+		}
+
+		await delay(5000);
+	}
 }
 
-async function getMetadata(url) {
-	const match = url.match(/(?:v=|youtu\.be\/)([a-zA-Z0-9_-]{11})/);
+export async function getMetadata(url) {
+	const match = url.match(/(?:youtube(?:-nocookie)?\.com\/(?:.*?[?&]v=|embed\/|v\/|shorts\/|live\/|music\/watch\?v=)|youtu\.be\/)([A-Za-z0-9_-]{11})/);
 	if (!match) throw new Error('Link Youtube tidak valid');
-
 	const res = await axios.post(
 		'https://www.terrific.tools/api/youtube/get-video-metadata',
 		{

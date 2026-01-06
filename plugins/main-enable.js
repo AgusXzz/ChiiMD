@@ -35,6 +35,12 @@ let handler = async (m, { conn, usedPrefix, command, args, isOwner, isAdmin }) =
 			if (!isOwner) return global.dfail('owner', m, conn);
 			settings.public = isEnable;
 			break;
+		case 'gconly':
+		case 'grouponly':
+			isAll = true;
+			if (!isOwner) return global.dfail('owner', m, conn);
+			settings.gconly = isEnable;
+			break;
 		case 'anticall':
 			isAll = true;
 			if (!isOwner) return global.dfail('owner', m, conn);
@@ -60,6 +66,7 @@ ${
 - autoread
 - self
 - anticall
+- gconly
 `
 		: ''
 }

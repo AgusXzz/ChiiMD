@@ -3,7 +3,7 @@ import { proto, generateWAMessage, areJidsSameUser } from 'baileys';
 export async function all(m, chatUpdate) {
 	if (m.isBaileys) return;
 	if (!m.message) return;
-	if (!m.msg.fileSha256) return;
+	if (!m.msg?.fileSha256) return;
 	let hash = Buffer.from(m.msg.fileSha256).toString('base64');
 	if (!(hash in global.db.data.sticker)) return;
 

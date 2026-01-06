@@ -77,7 +77,7 @@ Mengirim.....`);
 		}
 	} catch (err) {
 		console.error(err);
-		m.reply('Terjadi kesalahan saat memproses permintaan');
+		return m.reply('Terjadi kesalahan saat memproses permintaan');
 	}
 };
 

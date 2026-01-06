@@ -15,26 +15,7 @@ let handler = async (m) => {
 		})
 		.join('\n\n');
 
-	conn.relayMessage(
-		m.chat,
-		{
-			extendedTextMessage: {
-				text: handlers,
-				contextInfo: {
-					externalAdReply: {
-						title: 'D A S H B O A R D',
-						mediaType: 1,
-						previewType: 1,
-						renderLargerThumbnail: true,
-						thumbnailUrl: 'https://telegra.ph/file/cf4f28ed3b9ebdfb30adc.png',
-						sourceUrl: global.link,
-					},
-				},
-				mentions: [m.sender],
-			},
-		},
-		{}
-	);
+	conn.adReply(m.chat, handlers, 'https://telegra.ph/file/cf4f28ed3b9ebdfb30adc.png', m, { title: 'D A S H B O A R D' });
 };
 
 handler.help = ['dashboard'];

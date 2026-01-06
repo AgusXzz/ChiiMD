@@ -8,6 +8,7 @@ global.mods = [];
 
 global.namebot = 'ChiiBOT - MD';
 global.author = 'Agus';
+global.source = 'https://chat.whatsapp.com/LF76mRDRwLlI4pdbMi0d5A?mode=hqrc';
 
 global.wait = 'Loading...';
 global.eror = 'Terjadi Kesalahan...';
