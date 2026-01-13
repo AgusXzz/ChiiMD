@@ -3,7 +3,7 @@ import { promisify } from 'util';
 let exec = promisify(_exec).bind(cp);
 let handler = async (m, { conn, command, text }) => {
 	if (global.conn.user.jid != conn.user.jid) return;
-	m.reply('Executing...');
+	const { key } = await m.reply('Executing...');
 	let o;
 	try {
 		o = await exec(command.trimStart() + ' ' + text.trimEnd());
@@ -11,7 +11,7 @@ let handler = async (m, { conn, command, text }) => {
 		o = e;
 	} finally {
 		let { stdout, stderr } = o;
-		if (stdout.trim()) m.reply(stdout);
+		if (stdout.trim()) m.edit(stdout, key);
 		if (stderr.trim()) m.reply(stderr);
 	}
 };

@@ -37,13 +37,12 @@ handler.command = ['ping', 'speed', 'os'];
 export default handler;
 
 function toTime(ms) {
-	let h = Math.floor(ms / 3600000);
-	let m = Math.floor(ms / 60000) % 60;
-	let s = Math.floor(ms / 1000) % 60;
+	let d = Math.floor(ms / 86400000);
+	let h = Math.floor((ms % 86400000) / 3600000);
+	let m = Math.floor((ms % 3600000) / 60000);
+	let s = Math.floor((ms % 60000) / 1000);
 
-	if (h > 0) return `${h} Jam ${m} Menit ${s} Detik`;
-	if (m > 0) return `${m} Menit ${s} Detik`;
-	return `${s} Detik`;
+	return (d ? `${d}d ` : '') + (h ? `${h}h ` : '') + (m ? `${m}m ` : '') + (s ? `${s}s` : '');
 }
 
 function formatSize(size) {

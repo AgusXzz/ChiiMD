@@ -28,7 +28,7 @@ export async function handler(chatUpdate) {
 
 		const isROwner = [conn.decodeJid(global.conn.user.id), ...global.owner.map(([number]) => number)].map((v) => v.replace(/[^0-9]/g, '') + '@s.whatsapp.net').includes(m.sender);
 		const isOwner = isROwner || m.fromMe;
-		const isPrems = isROwner || db.data.users[m.sender].premiumTime > 0;
+		const isPrems = isROwner || db.data.users[m.sender]?.premiumTime > 0;
 
 		if (global.db.data.settings[this.user.jid].gconly && !m.isGroup && !isOwner && !isPrems) return;
 		if (!global.db.data.settings[this.user.jid].public && !isOwner && !m.fromMe) return;
@@ -237,6 +237,7 @@ export async function handler(chatUpdate) {
 										data.jid
 									);
 							}
+						m.reply(text);
 					}
 				} finally {
 					if (typeof plugin.after === 'function') {

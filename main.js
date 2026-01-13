@@ -173,7 +173,6 @@ async function connectionUpdate(update) {
 	if (!global.db.data) await global.loadDatabase();
 }
 
-process.on('uncaughtException', console.error);
 // let strQuot = /(["'])(?:(?=(\\?))\2.)*?\1/
 
 let isInit = true;
@@ -335,3 +334,16 @@ async function _quickTest() {
 _quickTest()
 	.then(() => conn.logger.info('☑️ Quick Test Done'))
 	.catch(console.error);
+
+function closeDB() {
+	try {
+		global.db.sqlite.close();
+		console.log('Database closed');
+	} catch (e) {
+		console.error(e);
+	}
+}
+process.on('uncaughtException', console.error);
+process.on('exit', closeDB);
+process.on('SIGINT', closeDB);
+process.on('SIGTERM', closeDB);

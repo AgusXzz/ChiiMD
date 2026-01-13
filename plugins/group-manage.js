@@ -49,13 +49,13 @@ const handler = async (m, { text, participants, groupMetadata, command }) => {
 			m.reply(`Demote: @${target.split('@')[0]}`);
 			break;
 
-		case 'opengc':
+		case 'closegc':
 		case 'mute':
 			conn.groupSettingUpdate(m.chat, 'announcement');
 			m.reply('Grup berhasil ditutup (hanya admin yang bisa chat).');
 			break;
 
-		case 'closegc':
+		case 'opengc':
 		case 'unmute':
 			conn.groupSettingUpdate(m.chat, 'not_announcement');
 			m.reply('Grup berhasil dibuka (semua member bisa chat).');
