@@ -1,6 +1,9 @@
+# Node
 node_modules
-sessions
-*.bak
-*.zip
-database.json
-push.sh
+npm-debug.log
+yarn-error.log
+
+# Data
+data/
+*.log
+sessions/

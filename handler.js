@@ -311,27 +311,38 @@ export async function participantsUpdate({ id, participants, action, simulate = 
 			if (chat.welcome) {
 				for (let user of participants) {
 					user = this.getJid(user?.phoneNumber || user.id);
-					const tamnel = await this.profilePictureUrl(user, 'image', 'buffer');
+					let tamnel;
+					try {
+						tamnel = await this.profilePictureUrl(user, 'image', 'buffer');
+					} catch {
+						tamnel = null; // Or a default image buffer
+					}
 					text = (action === 'add' ? chat.sWelcome || this.welcome || conn.welcome || 'Welcome, @user!' : chat.sBye || this.bye || conn.bye || 'Bye, @user!')
 						.replace('@user', `@${user.split('@')[0]}`)
 						.replace('@subject', this.getName(id))
 						.replace('@desc', groupMetadata.desc || '');
-					this.sendMessage(
-						id,
-						{
-							text,
-							contextInfo: {
-								mentionedJid: [user],
-								externalAdReply: {
-									title: action == 'add' ? '💌 WELCOME' : '🐾 BYE',
-									body: action == 'add' ? 'YAELAH BEBAN GROUP NAMBAH 1 :(' : 'BYE BEBAN! :)',
-									mediaType: 1,
-									previewType: 'PHOTO',
-									renderLargerThumbnail: true,
-									thumbnail: tamnel,
-								},
+
+					const messagePayload = {
+						text,
+						contextInfo: {
+							mentionedJid: [user],
+							externalAdReply: {
+								title: action == 'add' ? '💌 WELCOME' : '🐾 BYE',
+								body: action == 'add' ? 'YAELAH BEBAN GROUP NAMBAH 1 :(' : 'BYE BEBAN! :)',
+								mediaType: 1,
+								previewType: 'PHOTO',
+								renderLargerThumbnail: true,
 							},
 						},
+					};
+
+					if (tamnel) {
+						messagePayload.contextInfo.externalAdReply.thumbnail = tamnel;
+					}
+
+					this.sendMessage(
+						id,
+						messagePayload,
 						{
 							ephemeralExpiration: groupMetadata.ephemeralDuration,
 						}
