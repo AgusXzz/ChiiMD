@@ -48,8 +48,8 @@ export async function handler(chatUpdate) {
 		const isBotAdmin = bot?.admin || false; // Are you Admin?
 
 		const ___dirname = path.join(path.dirname(fileURLToPath(import.meta.url)), './plugins');
-		for (let name in global.plugins) {
-			let plugin = global.plugins[name];
+		for (const name in global.plugins) {
+			const plugin = global.plugins[name];
 			if (!plugin) continue;
 			if (plugin.disabled) continue;
 			const __filename = path.join(___dirname, name);
@@ -61,7 +61,6 @@ export async function handler(chatUpdate) {
 						__filename,
 					});
 				} catch (e) {
-					// if (typeof e === 'string') continue
 					console.error(e);
 					for (let [jid] of global.owner.filter(([number, _, isDeveloper]) => isDeveloper && number)) {
 						let data = (await conn.onWhatsApp(jid))[0] || {};
@@ -69,119 +68,123 @@ export async function handler(chatUpdate) {
 					}
 				}
 			}
-			if (plugin.tags && plugin.tags.includes('admin')) {
-				// global.dfail('restrict', m, this)
-				continue;
-			}
-			const str2Regex = (str) => str.replace(/[|\\{}()[\]^$+*?.]/g, '\\$&');
-			let _prefix = plugin.customPrefix ? plugin.customPrefix : conn.prefix ? conn.prefix : global.prefix;
-			let match = (
-				_prefix instanceof RegExp // RegExp Mode?
-					? [[_prefix.exec(m.text), _prefix]]
-					: Array.isArray(_prefix) // Array?
-						? _prefix.map((p) => {
-								let re =
-									p instanceof RegExp // RegExp in Array?
-										? p
-										: new RegExp(str2Regex(p));
-								return [re.exec(m.text), re];
-							})
-						: typeof _prefix === 'string' // String?
-							? [[new RegExp(str2Regex(_prefix)).exec(m.text), new RegExp(str2Regex(_prefix))]]
-							: [[[], new RegExp()]]
-			).find((p) => p[1]);
-			if (typeof plugin.before === 'function') {
-				if (
-					await plugin.before.call(this, m, {
-						match,
-						conn: this,
-						participants,
-						groupMetadata,
-						user,
-						bot,
-						isROwner,
-						isOwner,
-						isRAdmin,
-						isAdmin,
-						isBotAdmin,
-						isPrems,
-						chatUpdate,
-						__dirname: ___dirname,
-						__filename,
-					})
-				)
-					continue;
-			}
-			if (typeof plugin !== 'function') continue;
-			if ((usedPrefix = (match[0] || '')[0])) {
-				let noPrefix = m.text.replace(usedPrefix, '');
-				let [command, ...args] = noPrefix.trim().split` `.filter((v) => v);
-				args = args || [];
-				let _args = noPrefix.trim().split` `.slice(1);
-				let text = _args.join` `;
-				command = (command || '').toLowerCase();
-				let fail = plugin.fail || global.dfail; // When failed
-				let isAccept =
-					plugin.command instanceof RegExp // RegExp Mode?
-						? plugin.command.test(command)
-						: Array.isArray(plugin.command) // Array?
-							? plugin.command.some((cmd) =>
-									cmd instanceof RegExp // RegExp in Array?
-										? cmd.test(command)
-										: cmd === command
-								)
-							: typeof plugin.command === 'string' // String?
-								? plugin.command === command
-								: false;
+		}
 
-				if (!isAccept) continue;
-				m.plugin = name;
+		const str2Regex = (str) => str.replace(/[|\\{}()[\]^$+*?.]/g, '\\$&');
+		let _prefix = global.prefix;
+		let match = (
+			_prefix instanceof RegExp // RegExp Mode?
+				? [[_prefix.exec(m.text), _prefix]]
+				: Array.isArray(_prefix) // Array?
+				? _prefix.map((p) => {
+						let re =
+							p instanceof RegExp // RegExp in Array?
+								? p
+								: new RegExp(str2Regex(p));
+						return [re.exec(m.text), re];
+				  })
+				: typeof _prefix === 'string' // String?
+				? [[new RegExp(str2Regex(_prefix)).exec(m.text), new RegExp(str2Regex(_prefix))]]
+				: [[[], new RegExp()]]
+		).find((p) => p[1]);
+
+		if ((usedPrefix = (match[0] || '')[0])) {
+			let noPrefix = m.text.replace(usedPrefix, '');
+			let [command, ...args] = noPrefix.trim().split` `.filter((v) => v);
+			args = args || [];
+			let _args = noPrefix.trim().split` `.slice(1);
+			let text = _args.join` `;
+			command = (command || '').toLowerCase();
+			let plugin = global.commandMap.get(command);
+
+			if (!plugin) {
+				for (const regExpPlugin of global.regExpPlugins) {
+					const isAccept = regExpPlugin.command.test(command);
+					if (isAccept) {
+						plugin = regExpPlugin;
+						break;
+					}
+				}
+			}
+
+			if (plugin) {
+				const __filename = path.join(___dirname, plugin.filename);
+
+				if (plugin.disabled) return;
+				if (plugin.tags && plugin.tags.includes('admin')) {
+					return;
+				}
+				if (typeof plugin.before === 'function') {
+					if (
+						await plugin.before.call(this, m, {
+							match,
+							conn: this,
+							participants,
+							groupMetadata,
+							user,
+							bot,
+							isROwner,
+							isOwner,
+							isRAdmin,
+							isAdmin,
+							isBotAdmin,
+							isPrems,
+							chatUpdate,
+							__dirname: ___dirname,
+							__filename,
+						})
+					)
+						return;
+				}
+				if (typeof plugin !== 'function') return;
+
+				m.plugin = plugin.filename;
 				if (!isOwner && (m.chat in global.db.data.chats || m.sender in global.db.data.users)) {
 					let chat = global.db.data.chats[m.chat];
-					if (name != 'tools-delete.js' && chat?.isBanned) return; // Except this
+					if (plugin.filename != 'tools-delete.js' && chat?.isBanned) return; // Except this
 				}
 				if (plugin.rowner && plugin.owner && !(isROwner || isOwner)) {
 					// Both Owner
 					fail('owner', m, this);
-					continue;
+					return;
 				}
 				if (plugin.rowner && !isROwner) {
 					// Real Owner
 					fail('rowner', m, this);
-					continue;
+					return;
 				}
 				if (plugin.owner && !isOwner) {
 					// Number Owner
 					fail('owner', m, this);
-					continue;
+					return;
 				}
 				if (plugin.premium && !isPrems) {
 					// Premium
 					fail('premium', m, this);
-					continue;
+					return;
 				}
 				if (plugin.group && !m.isGroup) {
 					// Group Only
 					fail('group', m, this);
-					continue;
+					return;
 				} else if (plugin.botAdmin && !isBotAdmin) {
 					// You Admin
 					fail('botAdmin', m, this);
-					continue;
+					return;
 				} else if (plugin.admin && !isAdmin) {
 					// User Admin
 					fail('admin', m, this);
-					continue;
+					return;
 				}
 				if (plugin.private && m.isGroup) {
 					// Private Chat Only
 					fail('private', m, this);
-					continue;
+					return;
 				}
 				if (plugin.register == true && _user.registered == false) {
 					// Butuh daftar?
 					fail('unreg', m, this);
-					continue;
+					return;
 				}
 				m.isCommand = true;
 				let xp = 'exp' in plugin ? parseInt(plugin.exp) : 17; // XP Earning per command
@@ -190,11 +193,11 @@ export async function handler(chatUpdate) {
 				else m.exp += xp;
 				if (!isPrems && plugin.limit && global.db.data.users[m.sender].limit < plugin.limit * 1) {
 					this.reply(m.chat, `[❗] Limit anda habis, silahkan beli melalui *${usedPrefix}buy limit*`, m);
-					continue; // Limit habis
+					return; // Limit habis
 				}
 				if (plugin.level > _user.level) {
 					this.reply(m.chat, `[💬] Diperlukan level ${plugin.level} untuk menggunakan perintah ini\n*Level mu:* ${_user.level} 📊`, m);
-					continue; // If the level has not been reached
+					return; // If the level has not been reached
 				}
 				let extra = {
 					match,
@@ -249,7 +252,6 @@ export async function handler(chatUpdate) {
 					}
 					if (m.limit) m.reply(+m.limit + ' Limit terpakai ✔️');
 				}
-				break;
 			}
 		}
 	} catch (e) {

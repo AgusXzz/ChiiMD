@@ -242,12 +242,29 @@ global.reloadHandler = async function (restatConn) {
 const pluginFolder = global.__dirname(join(__dirname, './plugins/index'));
 const pluginFilter = (filename) => /\.js$/.test(filename);
 global.plugins = {};
+global.commandMap = new Map();
+global.regExpPlugins = [];
 async function filesInit() {
 	for (let filename of fs.readdirSync(pluginFolder).filter(pluginFilter)) {
 		try {
 			let file = global.__filename(join(pluginFolder, filename));
 			const module = await import(file);
-			global.plugins[filename] = module.default || module;
+			const plugin = module.default || module;
+			global.plugins[filename] = plugin;
+			if (plugin.command) {
+				const commands = Array.isArray(plugin.command) ? plugin.command : [plugin.command];
+				let hasRegExp = false;
+				for (const command of commands) {
+					if (command instanceof RegExp) {
+						hasRegExp = true;
+						break;
+					}
+					global.commandMap.set(command, { ...plugin, filename });
+				}
+				if (hasRegExp) {
+					global.regExpPlugins.push({ ...plugin, filename });
+				}
+			}
 		} catch (e) {
 			conn.logger.error(`❌ Failed to load plugins ${filename}: ${e}`);
 			delete global.plugins[filename];
