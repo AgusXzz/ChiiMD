@@ -404,15 +404,15 @@ Untuk mematikan fitur ini, ketik
 
 global.dfail = (type, m, conn) => {
 	let msg = {
-		rowner: 'Only Developer - Command ini hanya untuk developer bot',
-		owner: 'Only Owner - Command ini hanya untuk owner bot',
-		premium: 'Only Premium - Command ini hanya untuk pengguna premium',
-		group: 'Group Chat - Command ini hanya bisa dipakai di dalam grup',
-		private: 'Private Chat - Command ini hanya bisa dipakai di private chat',
-		admin: 'Only Admin - Command ini hanya untuk admin grup',
-		botAdmin: 'Only Bot Admin - Command ini hanya bisa digunakan ketika bot menjadi admin',
-		unreg: 'Halo kak! 👋 Anda harus mendaftar ke database bot dulu sebelum menggunakan fitur ini\nCara daftarnya tulis .daftar Nama.umur',
-		restrict: 'Restrict - Fitur restrict belum diaktifkan di chat ini',
+		rowner: '🔒 *Hanya Untuk Developer* 🔒\nMaaf, perintah ini hanya bisa diakses oleh developer bot.',
+		owner: '👑 *Hanya Untuk Owner* 👑\nPerintah ini spesial untuk owner bot.',
+		premium: '⭐ *Khusus Pengguna Premium* ⭐\nDaftar premium untuk membuka fitur ini!',
+		group: '👥 *Hanya di Grup* 👥\nPerintah ini hanya bisa digunakan di dalam grup.',
+		private: '👤 *Hanya di Private Chat* 👤\nYuk, ngobrol di chat pribadi untuk menggunakan perintah ini.',
+		admin: '🛡️ *Hanya Untuk Admin Grup* 🛡️\nPerintah ini hanya bisa diakses oleh admin grup.',
+		botAdmin: '🤖 *Jadikan Bot Admin* 🤖\nBot harus menjadi admin untuk menjalankan perintah ini.',
+		unreg: '👋 *Anda Belum Terdaftar* 👋\nDaftar dulu yuk! Ketik *.daftar Nama.Umur*',
+		restrict: '🚫 *Fitur Belum Aktif* 🚫\nFitur ini belum diaktifkan di chat ini.',
 	}[type];
 	if (msg) return conn.reply(m.chat, msg, m);
 };
