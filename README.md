@@ -19,10 +19,10 @@
 
 - [✨ Fitur Utama](#-fitur-utama)
 - [🚀 Instalasi & Penggunaan](#-instalasi--penggunaan)
-- [💡 Contoh Penggunaan](#-contoh-penggunaan)
 - [🔧 Konfigurasi](#-konfigurasi)
 - [📂 Struktur Proyek](#-struktur-proyek)
 - [🤝 Kontribusi](#-kontribusi)
+- [📜 Lisensi](#-lisensi)
 
 ## ✨ Fitur Utama
 
@@ -37,25 +37,6 @@ Bot ini dilengkapi dengan berbagai fitur yang terorganisir dalam plugin.
 | **Utilitas**       | Buat stiker, QR code, tingkatkan kualitas gambar (`hd`), dan lainnya.  |
 | **Sistem XP**      | Sistem registrasi, level-up, dan cek XP untuk pengguna.                |
 | **Owner**          | Perintah khusus untuk pemilik bot (ban, premium, dll).                 |
-
-## 💡 Contoh Penggunaan
-
-Berikut adalah beberapa contoh cara menggunakan perintah bot:
-
-- **Membuat stiker dari gambar yang Anda kirim:**
-
-    > Kirim gambar dengan caption `.sticker`
-
-- **Mengunduh video TikTok:**
-
-    > `.tiktok https://www.tiktok.com/@username/video/12345`
-
-- **Menggunakan AI (GPT):**
-
-    > `.gpt Siapakah penemu bola lampu?`
-
-- **Mencari tahu khodam Anda (untuk hiburan):**
-    > `.cekkhodam`
 
 ## 🚀 Instalasi & Penggunaan
 
@@ -98,14 +79,26 @@ Anda dapat menyesuaikan konfigurasi bot, seperti nomor owner dan pengaturan lain
 
 ## 🤝 Kontribusi
 
-Kontribusi kecil diterima (fix bug, perbaikan dokumentasi, penambahan fitur, dll). Langkah:
+Kami sangat terbuka untuk kontribusi dari komunitas! Jika Anda ingin berkontribusi, silakan ikuti langkah-langkah berikut:
 
-1. Fork repository
-2. Buat branch: git checkout -b feat/nama-fitur
-3. Commit & push
-4. Buka Pull Request
+1.  **Fork a Repository:** Buat *fork* dari repositori ini ke akun GitHub Anda.
+2.  **Buat Branch Baru:** Buat *branch* baru untuk mengerjakan fitur atau perbaikan Anda.
+    ```bash
+    git checkout -b fitur/nama-fitur-baru
+    ```
+3.  **Commit Perubahan:** Lakukan perubahan yang diperlukan dan *commit* dengan pesan yang deskriptif.
+    ```bash
+    git commit -m "feat: Menambahkan fitur baru yang luar biasa"
+    ```
+4.  **Push ke Branch:** *Push* perubahan Anda ke *branch* yang telah dibuat di *fork* Anda.
+    ```bash
+    git push origin fitur/nama-fitur-baru
+    ```
+5.  **Buka Pull Request:** Buka *Pull Request* dari *fork* Anda ke repositori utama. Pastikan untuk memberikan deskripsi yang jelas tentang perubahan yang Anda buat.
 
-Untuk perubahan fitur besar, buka issue dulu supaya dibahas.
+## 📜 Lisensi
+
+Proyek ini dilisensikan di bawah [ISC License](LICENSE).
 
 ---
 
