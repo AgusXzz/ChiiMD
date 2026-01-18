@@ -4,8 +4,9 @@ import { toAudio } from '../lib/converter.js';
 
 let handler = async (m, { usedPrefix, command, text }) => {
 	if (!text) throw `Usage: ${usedPrefix + command} <YouTube Audio URL>`;
+	m.react('🔁');
 	try {
-		const dl = await ytdown(text, 'video');
+		const dl = await ytdown(text, 'audio');
 		const info = await getMetadata(text);
 		const sthumb = await conn.sendMessage(
 			m.chat,
@@ -49,7 +50,7 @@ export async function ytdown(url, type = 'video') {
 	const { data } = await axios.post('https://ytdown.to/proxy.php', new URLSearchParams({ url }), { headers: { 'Content-Type': 'application/x-www-form-urlencoded' } });
 
 	const api = data.api;
-	if (api.status == 'ERROR') throw new Error(api.message);
+	if (api?.status == 'ERROR') throw new Error(api.message);
 
 	const media = api.mediaItems.find((m) => m.type.toLowerCase() === type.toLowerCase());
 	if (!media) throw new Error('Media type not found');

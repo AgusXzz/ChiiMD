@@ -18,7 +18,7 @@ let handler = async (m, _2) => {
 		let f = {
 			exports: {},
 		};
-		let exec = new (async () => {}).constructor('print', 'm', 'handler', 'require', 'conn', 'Array', 'process', 'args', 'groupMetadata', 'module', 'exports', 'argument', _text);
+		let exec = new (async () => {}).constructor('print', 'm', 'require', 'conn', 'args', 'groupMetadata', 'module', 'exports', 'argument', _text);
 		_return = await exec.call(
 			conn,
 			(...args) => {
@@ -27,10 +27,8 @@ let handler = async (m, _2) => {
 				return conn.reply(m.chat, format(...args), m);
 			},
 			m,
-			handler,
 			require,
 			conn,
-			process,
 			args,
 			groupMetadata,
 			f,
