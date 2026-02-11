@@ -26,8 +26,8 @@
 
 - [✨ Fitur Utama](#-fitur-utama)
 - [🚀 Instalasi & Penggunaan](#-instalasi--penggunaan)
-  - [Prasyarat](#prasyarat)
-  - [Langkah Instalasi](#langkah-instalasi)
+    - [Prasyarat](#prasyarat)
+    - [Langkah Instalasi](#langkah-instalasi)
 - [💡 Contoh Penggunaan](#-contoh-penggunaan)
 - [🔧 Konfigurasi](#-konfigurasi)
 - [📂 Struktur Proyek](#-struktur-proyek)
@@ -42,15 +42,15 @@
 
 Bot ini dilengkapi dengan berbagai fitur yang terorganisir dalam plugin untuk memudahkan pengembangan dan maintenance.
 
-| Kategori           | Deskripsi                                                                    |
-| ------------------ | ---------------------------------------------------------------------------- |
-| **AI**             | Terintegrasi dengan GPT, Deepseek, dan Kimi untuk percakapan cerdas         |
+| Kategori           | Deskripsi                                                                     |
+| ------------------ | ----------------------------------------------------------------------------- |
+| **AI**             | Terintegrasi dengan GPT, Deepseek, dan Kimi untuk percakapan cerdas           |
 | **Downloader**     | Unduh media dari Instagram, TikTok, YouTube (MP3/MP4), MediaFire, dan lainnya |
-| **Hiburan**        | Perintah seru seperti `cekkhodam`, `truth`, `dare`, dan game interaktif     |
-| **Manajemen Grup** | Alat untuk admin seperti `hidetag`, `totag`, dan pengaturan grup            |
-| **Utilitas**       | Buat stiker, QR code, tingkatkan kualitas gambar (`hd`), dan banyak lagi    |
-| **Sistem XP**      | Sistem registrasi, level-up, dan tracking XP untuk pengguna                 |
-| **Owner**          | Perintah khusus untuk pemilik bot (ban, premium, broadcast, dll)            |
+| **Hiburan**        | Perintah seru seperti `cekkhodam`, `truth`, `dare`, dan game interaktif       |
+| **Manajemen Grup** | Alat untuk admin seperti `hidetag`, `totag`, dan pengaturan grup              |
+| **Utilitas**       | Buat stiker, QR code, tingkatkan kualitas gambar (`hd`), dan banyak lagi      |
+| **Sistem XP**      | Sistem registrasi, level-up, dan tracking XP untuk pengguna                   |
+| **Owner**          | Perintah khusus untuk pemilik bot (ban, premium, broadcast, dll)              |
 
 ---
 
@@ -69,42 +69,42 @@ Pastikan sistem Anda memenuhi requirement berikut:
 
 1. **Clone repository ini:**
 
-   ```bash
-   git clone https://github.com/AgusXzz/ChiiMD.git
-   cd ChiiMD
-   ```
+    ```bash
+    git clone https://github.com/AgusXzz/ChiiMD.git
+    cd ChiiMD
+    ```
 
 2. **Install dependensi:**
 
-   ```bash
-   npm install
-   ```
+    ```bash
+    npm install
+    ```
 
-   Atau jika menggunakan yarn:
+    Atau jika menggunakan yarn:
 
-   ```bash
-   yarn install
-   ```
+    ```bash
+    yarn install
+    ```
 
 3. **Konfigurasi bot:**
 
-   Edit file `config.js` sesuai kebutuhan Anda (nomor owner, prefix, dll).
+    Edit file `config.js` sesuai kebutuhan Anda (nomor owner, prefix, dll).
 
 4. **Jalankan bot:**
 
-   ```bash
-   npm start
-   ```
+    ```bash
+    npm start
+    ```
 
-   Atau:
+    Atau:
 
-   ```bash
-   node index.js
-   ```
+    ```bash
+    node index.js
+    ```
 
 5. **Hubungkan ke WhatsApp:**
 
-   Masukkan pairing code yang muncul di terminal menggunakan aplikasi WhatsApp Anda untuk menghubungkan bot.
+    Masukkan pairing code yang muncul di terminal menggunakan aplikasi WhatsApp Anda untuk menghubungkan bot.
 
 ---
 
@@ -115,45 +115,48 @@ Berikut adalah beberapa contoh cara menggunakan perintah bot:
 ### Utilitas
 
 - **Membuat stiker dari gambar:**
-  ```
-  Kirim gambar dengan caption: .sticker
-  ```
+
+    ```
+    Kirim gambar dengan caption: .sticker
+    ```
 
 - **Membuat QR code:**
-  ```
-  .qrcode https://example.com
-  ```
+    ```
+    .qrcode https://example.com
+    ```
 
 ### Downloader
 
 - **Mengunduh video TikTok:**
-  ```
-  .tiktok https://www.tiktok.com/@username/video/12345
-  ```
+
+    ```
+    .tiktok https://www.tiktok.com/@username/video/12345
+    ```
 
 - **Mengunduh audio dari YouTube:**
-  ```
-  .ytmp3 [URL YouTube]
-  ```
+    ```
+    .ytmp3 [URL YouTube]
+    ```
 
 ### AI & Hiburan
 
 - **Menggunakan AI (GPT):**
-  ```
-  .gpt Siapakah penemu bola lampu?
-  ```
+
+    ```
+    .gpt Siapakah penemu bola lampu?
+    ```
 
 - **Mencari tahu khodam Anda:**
-  ```
-  .cekkhodam
-  ```
+    ```
+    .cekkhodam
+    ```
 
 ### Manajemen Grup
 
 - **Hide tag (tag semua anggota):**
-  ```
-  .hidetag [pesan]
-  ```
+    ```
+    .hidetag [pesan]
+    ```
 
 ---
 
@@ -163,11 +166,11 @@ Anda dapat menyesuaikan berbagai aspek bot melalui file `config.js`:
 
 ```javascript
 module.exports = {
-  owner: ['62xxx'], // Nomor owner
-  prefix: '.', // Prefix command
-  botName: 'ChiiBot',
-  // ... konfigurasi lainnya
-}
+	owner: ['62xxx'], // Nomor owner
+	prefix: '.', // Prefix command
+	botName: 'ChiiBot',
+	// ... konfigurasi lainnya
+};
 ```
 
 **Parameter Konfigurasi:**
@@ -233,26 +236,26 @@ Kontribusi sangat diterima dan dihargai! Berikut adalah cara berkontribusi:
 
 1. **Fork repository ini**
 2. **Buat branch baru:**
-   ```bash
-   git checkout -b fix/nama-bug
-   ```
+    ```bash
+    git checkout -b fix/nama-bug
+    ```
 3. **Commit perubahan Anda:**
-   ```bash
-   git commit -m "Fix: deskripsi singkat perbaikan"
-   ```
+    ```bash
+    git commit -m "Fix: deskripsi singkat perbaikan"
+    ```
 4. **Push ke branch:**
-   ```bash
-   git push origin fix/nama-bug
-   ```
+    ```bash
+    git push origin fix/nama-bug
+    ```
 5. **Buka Pull Request**
 
 ### Untuk Fitur Baru
 
 1. **Buka issue terlebih dahulu** untuk mendiskusikan fitur yang ingin ditambahkan
 2. Setelah disetujui, ikuti langkah yang sama seperti di atas dengan branch:
-   ```bash
-   git checkout -b feat/nama-fitur
-   ```
+    ```bash
+    git checkout -b feat/nama-fitur
+    ```
 
 ### Guidelines
 
