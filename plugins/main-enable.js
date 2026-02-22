@@ -64,7 +64,7 @@ ${
 		? `
 *Untuk Owner Bot:*
 - autoread
-- self
+- public
 - anticall
 - gconly
 `

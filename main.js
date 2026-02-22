@@ -34,7 +34,7 @@ serialize();
 
 const __dirname = global.__dirname(import.meta.url);
 
-global.prefix = new RegExp('^[' + '‎xzXZ/i!#$%+£¢€¥^°=¶∆×÷π√✓©®:;?&.\\-'.replace(/[|\\{}[\]()^$+*?.-]/g, '\\$&') + ']');
+global.prefix = new RegExp('^[' + '‎xzXZ/!#$%+£¢€¥^°=¶∆×÷π√✓©®:;?&.\\-'.replace(/[|\\{}[\]()^$+*?.-]/g, '\\$&') + ']');
 global.db = {
 	sqlite: null,
 	data: null,

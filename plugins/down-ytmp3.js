@@ -7,14 +7,13 @@ let handler = async (m, { usedPrefix, command, text }) => {
 	m.react('🔁');
 	try {
 		const dl = await ytdown(text, 'audio');
-		const info = await getMetadata(text);
-		const sthumb = await conn.sendMessage(
+		const info = dl.info;
+		const sthumb = await conn.adReply(
 			m.chat,
-			{
-				image: { url: info.thumbnails.maxres },
-				caption: `– 乂 *YouTube - Audio*\n> *- Judul :* ${info.title}\n> *- Channel :* ${info.channelTitle}\n> *- Upload Date :* ${new Date(info.publishedAt).toLocaleString()}\n> *- Durasi :* ${info.duration}\n> *- Views :* ${info.viewCount}\n> *- Likes :* ${info.likeCount}\n> *- Description :* ${info.description}`,
-			},
-			{ quoted: m }
+			`– 乂 *YouTube - Audio*\n> *- Judul :* ${info.title}\n> *- Channel :* ${info.uploader}\n> *- Durasi :* ${info.duration}\n> *- Views :* ${info.views}\n> *- Size :* ${info.size}`,
+			info.thumbnail,
+			m,
+			{ title: info.title, source: text }
 		);
 		const { data, ext } = await conn.getFile(dl.download);
 		const audios = await toAudio(data, ext);
@@ -71,22 +70,4 @@ export async function ytdown(url, type = 'video') {
 
 		await delay(5000);
 	}
-}
-
-export async function getMetadata(url) {
-	const match = url.match(/(?:youtube(?:-nocookie)?\.com\/(?:.*?[?&]v=|embed\/|v\/|shorts\/|live\/|music\/watch\?v=)|youtu\.be\/)([A-Za-z0-9_-]{11})/);
-	if (!match) throw new Error('Link Youtube tidak valid');
-	const res = await axios.post(
-		'https://www.terrific.tools/api/youtube/get-video-metadata',
-		{
-			videoId: match[1],
-		},
-		{
-			headers: {
-				'Content-Type': 'application/json',
-			},
-		}
-	);
-
-	return res.data;
 }

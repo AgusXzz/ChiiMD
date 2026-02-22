@@ -9,7 +9,7 @@ let handler = async (m, { text, usedPrefix, command }) => {
 	conn.deepseek[m.sender].push({ role: 'user', content: input });
 
 	try {
-		const res = await deepinfra('deepseek-ai/DeepSeek-V3.1', conn.deepseek[m.sender]);
+		const res = await deepinfra('deepseek-ai/DeepSeek-V3.2', conn.deepseek[m.sender]);
 		conn.deepseek[m.sender].push({ role: 'assistant', content: res });
 		m.reply(res);
 	} catch (err) {

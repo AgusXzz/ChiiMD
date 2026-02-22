@@ -2,7 +2,7 @@ import moment from 'moment-timezone';
 import * as levelling from '../lib/levelling.js';
 import fs from 'fs';
 
-const handler = async (m, { conn, usedPrefix: _p, isOwner, args }) => {
+const handler = async (m, { conn, usedPrefix: _p, command, isOwner, args }) => {
 	const allTags = {
 		main: 'Main Menu',
 		ai: 'Ai Menu',
@@ -66,6 +66,15 @@ const handler = async (m, { conn, usedPrefix: _p, isOwner, args }) => {
 			owner: p.owner ? '🄾' : '',
 		}));
 
+		const rows = [];
+		Object.keys(allTags).map((tag) => {
+			rows.push({
+				title: allTags[tag] + '😜',
+				description: 'Untuk Menampilkan ' + tag,
+				id: `${_p + command} ${tag}`,
+			});
+		});
+
 		const text = [
 			defaultMenu.before,
 			...Object.keys(tags).map((tag) => {
@@ -124,11 +133,39 @@ const handler = async (m, { conn, usedPrefix: _p, isOwner, args }) => {
 			readmore: readMore,
 		};
 
-		conn.sendMessage(
+		conn.sendButton(
 			m.chat,
 			{
 				image: fs.readFileSync('./media/menu.jpg'),
 				caption: style(text.replace(new RegExp(`%(${Object.keys(replace).sort((a, b) => b.length - a.length).join`|`})`, 'g'), (_, name) => '' + replace[name])),
+				footer: global.namebot,
+				buttons: [
+					{
+						name: 'single_select',
+						buttonParamsJson: JSON.stringify({
+							title: 'List Menu',
+							sections: [
+								{
+									rows,
+								},
+							],
+						}),
+					},
+					{
+						name: 'quick_reply',
+						buttonParamsJson: JSON.stringify({
+							display_text: 'Owner',
+							id: _p + 'owner',
+						}),
+					},
+					{
+						name: 'quick_reply',
+						buttonParamsJson: JSON.stringify({
+							display_text: 'Script BOT',
+							id: _p + 'script',
+						}),
+					},
+				],
 				contextInfo: {
 					mentionedJid: conn.parseMention(text),
 					forwardingScore: 10,
