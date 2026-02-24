@@ -1,8 +1,6 @@
-import axios from 'axios';
-
 let handler = async (m, { text, usedPrefix, command }) => {
 	const input = m.quoted ? m.quoted.text : text;
-	if (!input) return m.reply(`Masukkan pertanyaan atau perintah!\n\nContoh:\n${usedPrefix + command} apa itu AI`);
+	if (!input) throw `Masukkan pertanyaan atau perintah!\n\nContoh:\n${usedPrefix + command} apa itu AI`;
 
 	if (!conn.deepseek) conn.deepseek = {};
 	if (!conn.deepseek[m.sender]) conn.deepseek[m.sender] = [];
@@ -28,26 +26,27 @@ export default handler;
 
 export async function deepinfra(model, history) {
 	try {
-		const res = await axios.post(
-			'https://api.deepinfra.com/v1/openai/chat/completions',
-			{
+		const res = await fetch('https://api.deepinfra.com/v1/openai/chat/completions', {
+			method: 'POST',
+			headers: {
+				'User-Agent': 'Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Mobile Safari/537.36',
+				'Content-Type': 'application/json',
+			},
+			body: JSON.stringify({
 				model,
 				messages: history,
-			},
-			{
-				headers: {
-					'User-Agent': 'Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Mobile Safari/537.36',
-					'Content-Type': 'application/json',
-				},
-			}
-		);
+			}),
+		});
+		if (!res.ok) throw new Error(`HTTP Error ${res.status}`);
+		const data = await res.json();
 
 		let teks = [];
-		for (let out of res.data.choices || []) {
+		for (let out of data?.choices || []) {
 			if (out.message?.content) teks.push(out.message.content);
 		}
+
 		return teks.join('\n');
 	} catch (e) {
-		return e?.response?.data || e?.message;
+		throw new Error('Error' + e?.message);
 	}
 }

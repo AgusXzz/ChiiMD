@@ -1,13 +1,12 @@
-import axios from 'axios';
 import { delay } from 'baileys';
 
 let handler = async (m, { text }) => {
 	const nominal = parseInt(text);
-	if (!nominal) return m.reply('Jumlahnya berapa?');
-	if (nominal < 1000) return m.reply('Minimal 1.000 ya.');
-	if (nominal > 1000000) return m.reply('Emg bneran?');
+	if (!nominal) throw 'Jumlahnya berapa?';
+	if (nominal < 1000) throw 'Minimal 1.000 ya.';
+	if (nominal > 1000000) throw 'Emg bneran?';
 
-	if (!global.pakasir || !pakasir.slug || !pakasir.apikey) return m.reply('`pakasir.slug` dan `pakasir.apikey` belum di isi.');
+	if (!global.pakasir || !pakasir.slug || !pakasir.apikey) throw '`pakasir.slug` dan `pakasir.apikey` belum di isi.';
 
 	const cqris = await createQris(pakasir.slug, pakasir.apikey, nominal);
 	const expiredAt = new Date(cqris.expired_at);
@@ -49,7 +48,7 @@ let handler = async (m, { text }) => {
 			break;
 		}
 
-		await delay(5000);
+		await delay(10000);
 	}
 };
 
@@ -60,19 +59,26 @@ export default handler;
 
 async function createQris(project, apikey, amount) {
 	try {
-		const res = await axios.post(
-			'https://app.pakasir.com/api/transactioncreate/qris',
-			{
+		const orderId = (global.namebot || 'BOT').replace(/\s/g, '_') + '-' + Math.random().toString(36).substring(2, 10).toUpperCase();
+
+		const res = await fetch('https://app.pakasir.com/api/transactioncreate/qris', {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json',
+			},
+			body: JSON.stringify({
 				project,
-				order_id: (global.namebot || 'BOT').replace(/\s/g, '_') + '-' + Math.random().toString(36).substring(2, 10).toUpperCase(),
+				order_id: orderId,
 				amount,
 				api_key: apikey,
-			},
-			{ headers: { 'Content-Type': 'application/json' } }
-		);
+			}),
+		});
+		if (!res.ok) throw new Error(`HTTP ${res.status}`);
+		const data = await res.json();
 
-		if (!res.data?.payment) throw new Error('Gagal membuat QRIS.');
-		return res.data.payment;
+		if (!data?.payment) throw new Error('Gagal membuat QRIS.');
+
+		return data.payment;
 	} catch (e) {
 		throw new Error('Gagal membuat QRIS: ' + e.message);
 	}
@@ -80,8 +86,12 @@ async function createQris(project, apikey, amount) {
 
 async function checkStatus(project, apikey, orderId, amount) {
 	try {
-		const res = await axios.get(`https://app.pakasir.com/api/transactiondetail?project=${project}&amount=${amount}&order_id=${orderId}&api_key=${apikey}`);
-		return res.data.transaction;
+		const res = await fetch(`https://app.pakasir.com/api/transactiondetail?project=${project}&amount=${amount}&order_id=${orderId}&api_key=${apikey}`);
+		if (!res.ok) throw new Error(`HTTP ${res.status}`);
+
+		const data = await res.json();
+
+		return data?.transaction;
 	} catch (e) {
 		throw new Error('Gagal mengecek status QRIS: ' + e.message);
 	}

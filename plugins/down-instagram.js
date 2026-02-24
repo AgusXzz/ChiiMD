@@ -1,18 +1,14 @@
-import axios from 'axios';
-
 let handler = async (m, { text, usedPrefix, command }) => {
 	try {
 		const input = m.quoted ? m.quoted.text : text;
 		const regex = /(https?:\/\/(?:www\.)?instagram\.com\/(p|reel)\/[a-zA-Z0-9_-]+\/?)/;
 		const parseUrl = input.match(regex)?.[0];
 
-		if (!parseUrl) {
-			return m.reply(`# Cara Penggunaan\n\n` + `> Masukkan URL Instagram untuk mengunduh konten\n\n` + `# Contoh Penggunaan\n` + `> *${usedPrefix + command} https://www.instagram.com/*`);
-		}
+		if (!parseUrl) throw `# Cara Penggunaan\n\n` + `> Masukkan URL Instagram untuk mengunduh konten\n\n` + `# Contoh Penggunaan\n` + `> *${usedPrefix + command} https://www.instagram.com/*`;
 
 		const res = await igdl(parseUrl);
 
-		if (res.error) return m.reply('Gagal ambil konten dari Instagram~');
+		if (res.error) throw 'Gagal ambil konten dari Instagram~';
 
 		const result = res.info;
 
@@ -47,12 +43,21 @@ handler.limit = true;
 export default handler;
 
 async function igdl(url) {
-	let data = JSON.stringify({ url, type: 'video' });
-
-	const res = await axios.post('https://vdraw.ai/api/v1/instagram/ins-info', data, {
+	const res = await fetch('https://vdraw.ai/api/v1/instagram/ins-info', {
+		method: 'POST',
 		headers: {
 			'Content-Type': 'application/json',
 		},
+		body: JSON.stringify({
+			url,
+			type: 'video',
+		}),
 	});
-	return res.data?.data;
+
+	if (!res.ok) {
+		throw new Error(`HTTP error! Status: ${res.status}`);
+	}
+
+	const json = await res.json();
+	return json?.data;
 }

@@ -6,7 +6,7 @@ let handler = async (m, { usedPrefix, command, text }) => {
 	let ar = Object.keys(plugins);
 	let ar1 = ar.map((v) => v.replace('.js', ''));
 	if (!text) throw `uhm.. where the text?\n\nexample:\n${usedPrefix + command} info`;
-	if (!ar1.includes(text)) return m.reply(`*🗃️ NOT FOUND!*\n==================================\n\n${ar1.map((v) => ' ' + v).join`\n`}`);
+	if (!ar1.includes(text)) throw `*🗃️ NOT FOUND!*\n==================================\n\n${ar1.map((v) => ' ' + v).join`\n`}`;
 	let o;
 	try {
 		o = await exec('cat plugins/' + text + '.js');

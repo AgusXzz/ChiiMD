@@ -3,14 +3,14 @@ const handler = async (m, { text, participants, groupMetadata, command }) => {
 
 	const cmd = ['add', 'kick', 'promote', 'demote'];
 
-	if (cmd.includes(command) && !target) return m.reply('Reply/tag siapa yang ingin di proses.');
+	if (cmd.includes(command) && !target) throw 'Reply/tag siapa yang ingin di proses.';
 
 	const inGc = participants.some((v) => v.jid == target || v.id === target || v.phoneNumber === target);
 
 	switch (command) {
 		case 'add':
 			{
-				if (inGc) return m.reply('User sudah ada didalam grup!');
+				if (inGc) throw 'User sudah ada didalam grup!';
 				const response = await conn.groupParticipantsUpdate(m.chat, [target], 'add');
 				const jpegThumbnail = await conn.profilePictureUrl(m.chat, 'image', 'buffer');
 
@@ -32,19 +32,19 @@ const handler = async (m, { text, participants, groupMetadata, command }) => {
 			break;
 
 		case 'kick':
-			if (!inGc) return m.reply('User tidak ada dalam grup.');
+			if (!inGc) throw 'User tidak ada dalam grup.';
 			conn.groupParticipantsUpdate(m.chat, [target], 'remove');
 			m.reply(`Berhasil kick: @${target.split('@')[0]}`);
 			break;
 
 		case 'promote':
-			if (!inGc) return m.reply('User tidak berada dalam grup!');
+			if (!inGc) throw 'User tidak berada dalam grup!';
 			conn.groupParticipantsUpdate(m.chat, [target], 'promote');
 			m.reply(`Promote: @${target.split('@')[0]}`);
 			break;
 
 		case 'demote':
-			if (!inGc) return m.reply('User tidak berada dalam grup!');
+			if (!inGc) throw 'User tidak berada dalam grup!';
 			conn.groupParticipantsUpdate(m.chat, [target], 'demote');
 			m.reply(`Demote: @${target.split('@')[0]}`);
 			break;

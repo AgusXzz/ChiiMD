@@ -24,7 +24,7 @@ let handler = async (m, { args, usedPrefix, command }) => {
 				await m.reply(`✅ *Success* \n\n*Nama:* ${user.name}\n*Status Premium:* Permanen\n*Tanggal:* ${new Date().toLocaleDateString()}`);
 				await conn.reply(who, `✨ *Premium Info*\n\n*Nama:* ${user.name}\n*Status Premium:* Permanen\n*Tanggal:* ${new Date().toLocaleDateString()}`, null);
 			} else {
-				if (isNaN(args[0])) return m.reply(`⚠️ Hanya Nomor!\n\nContoh:\n${usedPrefix + command} 30 @${m.sender.split`@`[0]}`);
+				if (isNaN(args[0])) throw `⚠️ Hanya Nomor!\n\nContoh:\n${usedPrefix + command} 30 @${m.sender.split`@`[0]}`;
 				let txt = args[0];
 				let jumlahHari = 86400000 * txt;
 

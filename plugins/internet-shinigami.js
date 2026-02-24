@@ -4,7 +4,7 @@ import sizeOf from 'image-size';
 const BASE = 'https://api.shngm.io/v1';
 
 let handler = async (m, { conn, text, args, usedPrefix, command }) => {
-	if (!text) return m.reply('❌ Masukkan judul manhwa');
+	if (!text) throw '❌ Masukkan judul manhwa';
 
 	const cmd = usedPrefix + command;
 	const type = args[0];

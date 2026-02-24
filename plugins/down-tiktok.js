@@ -7,7 +7,7 @@ let handler = async (m, { text, usedPrefix, command }) => {
 		if (parseUrl) {
 			m.react('🔁');
 			let res = await (await fetch(`https://www.tikwm.com/api/?url=${parseUrl}&hd=1`)).json();
-			if (!res || !res.data) return m.reply('Gagal mengambil data dari TikTok.');
+			if (!res || !res.data) 'Gagal mengambil data dari TikTok.';
 
 			let data = res.data;
 			await m.reply(`# *TIKTOK DOWNLOADER*
@@ -53,7 +53,7 @@ Mengirim.....`);
 		} else if (input) {
 			let search = await (await fetch(`https://www.tikwm.com/api/feed/search?keywords=${input}&count=1&cursor=0&web=1&hd=1`)).json();
 			let video = search?.data?.videos[0];
-			if (!video) return m.reply(`Video tidak ditemukan untuk pencarian "${input}".`);
+			if (!video) throw `Video tidak ditemukan untuk pencarian "${input}".`;
 
 			let caption = `# *TIKTOK PLAYER*
 

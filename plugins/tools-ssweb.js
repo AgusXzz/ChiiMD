@@ -2,7 +2,7 @@
 
 let handler = async (m, { conn, args }) => {
 	try {
-		if (!args[0]) return m.reply('*Example :* .ssweb https://sfile.mobi');
+		if (!args[0]) throw '*Example :* .ssweb https://sfile.mobi';
 		let buff = await ssweb.capture(args[0]);
 		conn.sendMessage(m.chat, { image: buff }, { quoted: m });
 	} catch (e) {

@@ -5,7 +5,7 @@ let handler = async function (m, { text, usedPrefix }) {
 	let user = global.db.data.users[m.sender];
 	const pp = await conn.profilePictureUrl(m.sender, 'image', 'buffer');
 	if (user.registered === true) throw `You Have Already Registered In The Database, Do You Want To Re-Register? *${usedPrefix}unreg*`;
-	if (!Reg.test(text)) return m.reply(`Masukan Nama.Umur kamu\nContoh: .daftar Tio.17`);
+	if (!Reg.test(text)) throw `Masukan Nama.Umur kamu\nContoh: .daftar Vlyyyn.17`;
 	let [_, name, _splitter, age] = text.match(Reg);
 	if (!name) throw 'Nama Tidak Boleh Kosong';
 	if (!age) throw 'Umur Tidak Boleh Kosong';
