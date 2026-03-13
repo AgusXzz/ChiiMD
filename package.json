@@ -39,6 +39,7 @@
   ],
   "license": "ISC",
   "dependencies": {
+    "@aqul/akinator-api": "^3.0.1",
     "awesome-phonenumber": "^2.68.0",
     "axios": "^1.6.0",
     "baileys": "latest",
