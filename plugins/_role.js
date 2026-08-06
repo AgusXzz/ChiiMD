@@ -4,8 +4,8 @@ let handler = (m) => m;
 
 handler.before = function (m) {
 	let user = global.db.data.users[m.sender];
-	let before = user.level * 1;
-	if (user.autolevelup) {
+	let before = user?.level * 1;
+	if (user?.autolevelup) {
 		while (canLevelUp(user.level, user.exp, global.multiplier)) user.level++;
 	}
 

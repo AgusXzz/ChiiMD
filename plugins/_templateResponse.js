@@ -22,11 +22,9 @@ export async function all(m, chatUpdate) {
 									? m.message.templateButtonReplyMessage.selectedId
 									: m.mtype == 'interactiveResponseMessage'
 										? JSON.parse(m.msg.nativeFlowResponseMessage.paramsJson).id
-										: m.mtype == 'templateButtonReplyMessage'
-											? appenTextMessage(m.msg.selectedId, chatUpdate)
-											: m.mtype === 'messageContextInfo'
-												? m.message.buttonsResponseMessage?.selectedButtonId || m.message.listResponseMessage?.singleSelectReply.selectedRowId || m.text
-												: '';
+										: m.mtype === 'messageContextInfo'
+											? m.message.buttonsResponseMessage?.selectedButtonId || m.message.listResponseMessage?.singleSelectReply.selectedRowId || m.text
+											: '';
 
 	let messages = await generateWAMessage(
 		m.chat,

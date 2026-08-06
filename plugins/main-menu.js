@@ -11,6 +11,7 @@ const handler = async (m, { conn, usedPrefix: _p, command, isOwner, args }) => {
 		sticker: 'Sticker Menu',
 		tools: 'Tools Menu',
 		rpg: 'Rpg Menu',
+		guild: 'Guild Menu',
 		fun: 'Fun Menu',
 		group: 'Group Menu',
 		xp: 'XP & Level Menu',
@@ -96,7 +97,7 @@ const handler = async (m, { conn, usedPrefix: _p, command, isOwner, args }) => {
 			defaultMenu.after,
 		].join('\n');
 
-		let { exp, limit, money, level, role, registered } = global.db.data.users[m.sender];
+		let { exp, limit, level, role, registered } = global.db.data.users[m.sender];
 		let { min, xp, max } = levelling.xpRange(level, global.multiplier);
 		let name = registered ? global.db.data.users[m.sender].name : conn.getName(m.sender);
 		let _uptime = process.uptime() * 1000;
@@ -124,7 +125,6 @@ const handler = async (m, { conn, usedPrefix: _p, command, isOwner, args }) => {
 			level,
 			limit,
 			name,
-			money,
 			week,
 			date,
 			totalreg,

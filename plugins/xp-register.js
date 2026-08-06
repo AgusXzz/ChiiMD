@@ -16,10 +16,6 @@ let handler = async function (m, { text, usedPrefix }) {
 	user.age = age;
 	user.regTime = Date.now();
 	user.registered = true;
-	user.axe = 1;
-	user.axedurability = 30;
-	user.pickaxe = 1;
-	user.pickaxedurability = 40;
 	let sn = createHash('md5').update(m.sender).digest('hex');
 	let cap = `
 ─── USER INFO ───
@@ -27,10 +23,6 @@ let handler = async function (m, { text, usedPrefix }) {
 • Age: ${age} Years
 • Status: Success
 • Serial: ${sn}
-
-── STARTER PACK ──
-• Axe: 1 ( 30 Durability )
-• Pickaxe: 1 ( 40 Durability )
 `;
 	conn.adReply(m.chat, cap, pp, m, {
 		title: 'Berhasil Registrasi',

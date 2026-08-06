@@ -5,3 +5,6 @@ sessions
 database.json
 push.sh
 data
+tmp
+backup
+.opencode

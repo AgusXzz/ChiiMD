@@ -1,4 +1,5 @@
 export async function before(m, { isAdmin, isOwner, isBotAdmin }) {
+	if (m.text && global.prefix.test(m.text)) return;
 	const user = global.db.data.users[m.sender];
 	const chat = global.db.data.chats[m.chat];
 

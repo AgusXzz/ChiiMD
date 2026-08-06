@@ -4,10 +4,10 @@
 import { createRequire } from 'module';
 const require = createRequire(import.meta.url);
 const { Akinator } = require('@aqul/akinator-api');
-let handler = async (m, { conn }) => {
+let handler = async function (m, { conn }) {
 	let id = m.chat;
 	if (!conn.akinator) conn.akinator = new Map();
-	if (conn.akinator.has(id)) throw '🎯 Game Akinator sudah berjalan di chat ini.\nTekan tombol *Nyerah* untuk berhenti.'
+	if (conn.akinator.has(id)) throw '🎯 Game Akinator sudah berjalan di chat ini.\nTekan tombol *Nyerah* untuk berhenti.';
 	try {
 		const api = new Akinator({
 			region: 'id',

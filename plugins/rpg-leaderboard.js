@@ -1,65 +1,37 @@
-let handler = async (m, { conn, args, participants }) => {
-	let users = Object.entries(global.db.data.users).map(([key, value]) => {
-		return { ...value, jid: key };
-	});
-	let sortedExp = users.map(toNumber('exp')).sort(sort('exp'));
-	let sortedLim = users.map(toNumber('limit')).sort(sort('limit'));
-	let sortedLevel = users.map(toNumber('level')).sort(sort('level'));
-	let sortedMoney = users.map(toNumber('money')).sort(sort('money'));
-	let usersExp = sortedExp.map(enumGetKey);
-	let usersLim = sortedLim.map(enumGetKey);
-	let usersLevel = sortedLevel.map(enumGetKey);
-	let usersMoney = sortedMoney.map(enumGetKey);
-	let len = args[0] && args[0].length > 0 ? Math.min(10, Math.max(parseInt(args[0]), 10)) : Math.min(10, sortedExp.length);
-	let text = `
-• *XP Leaderboard Top ${len}* •
-Kamu: *${usersExp.indexOf(m.sender) + 1}* dari *${usersExp.length}*
+import { guildLevel, fmt, sendBtn, BTN } from '../lib/rpg.js';
 
-${sortedExp.slice(0, len).map(({ jid, exp }, i) => `${i + 1}. ${participants.some((p) => jid === p.jid) ? `(${conn.getName(jid)}) wa.me/` : '@'}${jid.split`@`[0]} *${exp} Exp*`).join`\n`}
-
-• *Limit Leaderboard Top ${len}* •
-Kamu: *${usersLim.indexOf(m.sender) + 1}* dari *${usersLim.length}*
-
-${sortedLim.slice(0, len).map(({ jid, limit }, i) => `${i + 1}. ${participants.some((p) => jid === p.jid) ? `(${conn.getName(jid)}) wa.me/` : '@'}${jid.split`@`[0]} *${limit} Limit*`).join`\n`}
-
-• *Level Leaderboard Top ${len}* •
-Kamu: *${usersLevel.indexOf(m.sender) + 1}* dari *${usersLevel.length}*
-
-${sortedLevel.slice(0, len).map(({ jid, level }, i) => `${i + 1}. ${participants.some((p) => jid === p.jid) ? `(${conn.getName(jid)}) wa.me/` : '@'}${jid.split`@`[0]} *Level ${level}*`).join`\n`}
-
-• *Money Leaderboard Top ${len}* •
-Kamu: *${usersMoney.indexOf(m.sender) + 1}* dari *${usersMoney.length}*
-
-${sortedMoney.slice(0, len).map(({ jid, money }, i) => `${i + 1}. ${participants.some((p) => jid === p.jid) ? `(${conn.getName(jid)}) wa.me/` : '@'}${jid.split`@`[0]} *Money ${money}*`).join`\n`}
-`.trim();
-	let lbnya = 'https://files.cults3d.com/uploaders/21646250/illustration-file/4fcb5125-8c8b-40b1-ae64-62feea6cb2a2/ousamaall.png';
-	conn.sendFile(m.chat, lbnya, '', text, m, {
-		contextInfo: {
-			mentionedJid: [...usersExp.slice(0, len), ...usersLim.slice(0, len), ...usersLevel.slice(0, len), ...usersMoney.slice(0, len)].filter((v) => !participants.some((p) => v === p.jid)),
-		},
-	});
+let handler = async function (m, { args }) {
+	const mode = (args[0] || 'level').toLowerCase();
+	if (mode === 'guild') {
+		const gs = Object.values(global.db.data.guilds).sort((a, b) => (b.exp || 0) - (a.exp || 0));
+		return sendBtn(
+			this,
+			m,
+			'*🏰 GUILD TOP*\n\n' +
+				(gs
+					.slice(0, 10)
+					.map((g, i) => `${i + 1}. ${g.name} — Lv.${guildLevel(g)} (${(g.members || []).length} member)`)
+					.join('\n') || 'Belum ada guild.'),
+			LB_BTNS
+		);
+	}
+	const users = Object.values(global.db.data.users);
+	let list;
+	if (mode === 'money') list = users.sort((a, b) => (b.money || 0) - (a.money || 0));
+	else if (mode === 'kills') list = users.sort((a, b) => (b.kills || 0) - (a.kills || 0));
+	else list = users.sort((a, b) => (b.level || 0) - (a.level || 0) || (b.exp || 0) - (a.exp || 0));
+	const rows = list
+		.slice(0, 10)
+		.map((u, i) => `${i + 1}. ${u.name || '???'} — Lv.${u.level}${mode === 'money' ? ' 💹 ' + fmt(u.money) : mode === 'kills' ? ' 🗡️ ' + (u.kills || 0) : ''}`)
+		.join('\n');
+	return sendBtn(this, m, `*LEADERBOARD ${mode.toUpperCase()}*\n\n${rows}`, LB_BTNS);
 };
-handler.help = ['leaderboard'];
+
+const LB_BTNS = [BTN('📊 Level', '.top'), BTN('💹 Money', '.top money'), BTN('🗡️ Kills', '.top kills'), BTN('🏰 Guild', '.top guild')];
+
+handler.help = ['top'];
 handler.tags = ['rpg'];
-handler.command = /^(leaderboard|lb)$/i;
-handler.group = true;
-handler.exp = 0;
+handler.command = /^(top|leaderboard)$/i;
+handler.register = true;
 
 export default handler;
-
-function sort(property, ascending = true) {
-	if (property) return (...args) => args[ascending & 1][property] - args[!ascending & 1][property];
-	else return (...args) => args[ascending & 1] - args[!ascending & 1];
-}
-
-function toNumber(property, _default = 0) {
-	if (property)
-		return (a, i, b) => {
-			return { ...b[i], [property]: a[property] === undefined ? _default : a[property] };
-		};
-	else return (a) => (a === undefined ? _default : a);
-}
-
-function enumGetKey(a) {
-	return a.jid;
-}

@@ -18,6 +18,7 @@ export async function handler(chatUpdate) {
 	try {
 		m = smsg(this, m) || m;
 		if (!m) return;
+		if (Math.floor(Date.now() / 1000) - m.messageTimestamp > 20) return console.log('Pesan terlalu lama, skip');
 		m.exp = 0;
 		m.limit = false;
 
@@ -192,7 +193,7 @@ export async function handler(chatUpdate) {
 					this.reply(m.chat, `[❗] Limit anda habis, silahkan beli melalui *${usedPrefix}buy limit*`, m);
 					continue; // Limit habis
 				}
-				if (plugin.level > _user.level) {
+				if (plugin.level > _user?.level) {
 					this.reply(m.chat, `[💬] Diperlukan level ${plugin.level} untuk menggunakan perintah ini\n*Level mu:* ${_user.level} 📊`, m);
 					continue; // If the level has not been reached
 				}
