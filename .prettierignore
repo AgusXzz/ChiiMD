@@ -3,6 +3,5 @@ tmp/
 media/
 sessions/
 
-main.js
 *.json
 *.bak

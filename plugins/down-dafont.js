@@ -1,6 +1,5 @@
 //elyas_tzy x furqan
 //izin wm min
-import axios from 'axios';
 import * as cheerio from 'cheerio';
 
 let handler = async (m, { conn, args }) => {
@@ -20,7 +19,7 @@ let handler = async (m, { conn, args }) => {
 .dafont dl https://dl.dafont.com/dl/?f=fancy_nancy_2`;
 
 	switch (cmd) {
-		case 'search':
+		case 'search': {
 			if (!args[1]) throw 'Mau Cari Apa Di Dafont?';
 			const query = args[1];
 			try {
@@ -47,8 +46,9 @@ let handler = async (m, { conn, args }) => {
 				m.reply('❌ Error saat mencari font');
 			}
 			break;
+		}
 
-		case 'dl':
+		case 'dl': {
 			if (!args[1]) throw 'Mana Link Nya?';
 			const url = args[1];
 			if (!url.startsWith('https://dl.dafont.com/')) throw '❌ Link tidak valid';
@@ -77,6 +77,7 @@ let handler = async (m, { conn, args }) => {
 				m.reply('❌ Gagal download font');
 			}
 			break;
+		}
 
 		default:
 			m.reply('*Subcommand Yang Tersedia :*\n.dafont search\n.dafont dl');

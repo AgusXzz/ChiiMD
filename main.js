@@ -126,19 +126,19 @@ if (!conn.authState.creds.registered) {
 	}
 }
 
-	if (global.db) {
-		setInterval(() => {
-			if (global.db.data) global.db.flush?.();
-			expireMarket();
+if (global.db) {
+	setInterval(() => {
+		if (global.db.data) global.db.flush?.();
+		expireMarket();
 
-			if ((global.support || {}).find) {
-				const tmp = [tmpdir(), 'tmp'];
-				tmp.forEach((filename) => spawn('find', [filename, '-amin', '3', '-type', 'f', '-delete']));
-			}
-		}, 5000);
+		if ((global.support || {}).find) {
+			const tmp = [tmpdir(), 'tmp'];
+			tmp.forEach((filename) => spawn('find', [filename, '-amin', '3', '-type', 'f', '-delete']));
+		}
+	}, 5000);
 
-		setInterval(runBackup, 6 * 3600 * 1000).unref();
-	}
+	setInterval(runBackup, 6 * 3600 * 1000).unref();
+}
 
 async function connectionUpdate(update) {
 	const { receivedPendingNotifications, connection, lastDisconnect, isOnline } = update;

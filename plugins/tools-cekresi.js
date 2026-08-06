@@ -110,7 +110,7 @@ let handler = async (m, { conn, args, usedPrefix, command }) => {
 		});
 
 		conn.sendMessage(m.chat, { text: teks }, { quoted: m });
-	} catch (e) {
+	} catch {
 		m.reply('Resi tidak ditemukan atau API error');
 	}
 };
