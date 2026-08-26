@@ -36,6 +36,9 @@ async function upscale(buffer, rasio = 2) {
 	if (upload.status !== 200) throw new Error('Gagal Upload Image');
 
 	for (let i = 0; i < 20; i++) {
+		if (i === 19) throw new Error('Timeout: server upscaler terlalu lama merespons');
+		await new Promise((resolve) => setTimeout(resolve, 3000));
+
 		const check = await axios.post(
 			'https://get1.imglarger.com/api/UpscalerNew/CheckStatusNew',
 			{

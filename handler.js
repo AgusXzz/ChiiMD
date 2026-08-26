@@ -1,4 +1,6 @@
 import { smsg } from './lib/simple.js';
+import databaseInit from './lib/database.js';
+import printMessage from './lib/print.js';
 import { format } from 'util';
 import { fileURLToPath } from 'url';
 import path from 'path';
@@ -12,9 +14,21 @@ import chalk from 'chalk';
 export async function handler(chatUpdate) {
 	if (!chatUpdate) return;
 	this.pushMessage(chatUpdate.messages).catch(console.error);
-	let m = chatUpdate.messages[chatUpdate.messages.length - 1];
-	if (!m) return;
 	if (global.db.data == null) await global.loadDatabase();
+
+	// proses semua pesan dalam batch (bukan hanya yang terakhir)
+	for (const rawMsg of chatUpdate.messages) {
+		try {
+			await processMessage.call(this, rawMsg, chatUpdate);
+		} catch (e) {
+			console.error('Error processing message:', e);
+		}
+	}
+}
+
+async function processMessage(rawMsg, chatUpdate) {
+	let m = rawMsg;
+	if (!m) return;
 	try {
 		m = smsg(this, m) || m;
 		if (!m) return;
@@ -23,7 +37,7 @@ export async function handler(chatUpdate) {
 		m.limit = false;
 
 		if (m.sender.endsWith('@broadcast') || m.sender.endsWith('@newsletter')) return;
-		await (await import(`./lib/database.js?v=${Date.now()}`)).default(m, this);
+		await databaseInit(m, this);
 
 		if (typeof m.text !== 'string') m.text = '';
 
@@ -287,7 +301,7 @@ export async function handler(chatUpdate) {
 		}
 
 		try {
-			await (await import(`./lib/print.js`)).default(m, this);
+			await printMessage(m, this);
 		} catch (e) {
 			console.log(m, m.quoted, e);
 		}
@@ -405,3 +419,20 @@ watchFile(file, async () => {
 	console.log(chalk.redBright("Update 'handler.js'"));
 	if (global.reloadHandler) console.log(await global.reloadHandler());
 });
+
+// hot-reload database.js & print.js saat file berubah (bukan di setiap pesan masuk)
+for (const libName of ['database', 'print']) {
+	const libPath = path.resolve(path.dirname(file), './lib/' + libName + '.js');
+	const watchLib = () => {
+		watchFile(libPath, async () => {
+			try {
+				await import('./lib/' + libName + '.js?update=' + Date.now());
+				console.log(chalk.yellowBright('Reloaded lib/' + libName + '.js'));
+			} catch (e) {
+				console.error(e);
+			}
+			setTimeout(watchLib, 1000);
+		});
+	};
+	watchLib();
+}

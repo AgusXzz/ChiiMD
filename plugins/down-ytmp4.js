@@ -1,14 +1,17 @@
-import { ytdown } from './down-ytmp3.js';
+import { isYouTubeUrl, getInfo, getVideoUrl } from '../lib/ytdl.js';
 
 let handler = async (m, { usedPrefix, command, text }) => {
 	if (!text) throw `Usage: ${usedPrefix + command} <YouTube Video URL>`;
+	if (!isYouTubeUrl(text)) throw '❌ URL bukan YouTube yang valid.';
 	m.react('🔁');
 	try {
-		const dl = await ytdown(text, 'video');
-		const info = dl.info;
-		const sthumb = await conn.adReply(
+		const info = await getInfo(text);
+		if (info.durationSec > 3600) throw '❌ Video terlalu panjang (maksimal 1 jam).';
+		const videoUrl = await getVideoUrl(text);
+
+		await conn.adReply(
 			m.chat,
-			`– 乂 *YouTube - Video*\n> *- Judul :* ${info.title}\n> *- Channel :* ${info.uploader}\n> *- Durasi :* ${info.duration}\n> *- Views :* ${info.views}\n> *- Size :* ${info.size}`,
+			`– 乂 *YouTube - Video*\n> *- Judul :* ${info.title}\n> *- Channel :* ${info.uploader}\n> *- Durasi :* ${info.duration}\n> *- Views :* ${info.views}`,
 			info.thumbnail,
 			m,
 			{ title: info.title, source: text }
@@ -17,13 +20,15 @@ let handler = async (m, { usedPrefix, command, text }) => {
 		await conn.sendMessage(
 			m.chat,
 			{
-				video: { url: dl.download },
+				video: { url: videoUrl },
 				fileName: `${info.title}.mp4`,
+				caption: `*${info.title}*\n> ${info.uploader} | ${info.duration}`,
 			},
-			{ quoted: sthumb }
+			{ quoted: m }
 		);
 	} catch (e) {
-		return m.reply(e.message);
+		console.error(e);
+		return m.reply(e.message?.startsWith('❌') ? e.message : '❌ Gagal mengunduh video. Coba lagi nanti.');
 	}
 };
 handler.help = ['ytmp4'];

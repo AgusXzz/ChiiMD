@@ -251,53 +251,6 @@ const pluginFolder = global.__dirname(join(__dirname, './plugins/index'));
 const pluginFilter = (filename) => /\.js$/.test(filename);
 global.plugins = {};
 
-function toTime(time) {
-	const ts = new Date(time).getTime();
-	const now = Date.now();
-	const diff = Math.floor((now - ts) / 1000);
-
-	const m = Math.floor(diff / 60);
-	const h = Math.floor(diff / 3600);
-	const d = Math.floor(diff / 86400);
-	const mn = Math.floor(diff / 2592000);
-	const y = Math.floor(diff / 31536000);
-
-	if (diff < 60) return `${diff} detik yang lalu`;
-	if (m < 60) return `${m} menit yang lalu`;
-	if (h < 24) return `${h} jam yang lalu`;
-	if (d < 30) return `${d} hari yang lalu`;
-	if (mn < 12) return `${mn} bulan yang lalu`;
-	return `${y} tahun yang lalu`;
-}
-
-async function script(m) {
-	try {
-		const raw = await fetch('https://api.github.com/repos/AgusXzz/ChiiMD');
-		if (!raw.ok) return m.reply('Gagal Mendapatkan Info Repository');
-		const res = await raw.json();
-
-		m.reply(`*Informasi Script*\n
-✨ *Nama:* ${res.name}
-👤 *Pemilik:* ${res.owner.login ?? '-'}
-⭐ *Star:* ${res.stargazers_count ?? 0}
-🍴 *Forks:* ${res.forks ?? 0}
-📅 *Dibuat sejak:* ${toTime(res.created_at)}
-♻️ *Terakhir update:* ${toTime(res.updated_at)}
-🚀 *Terakhir publish:* ${toTime(res.pushed_at)}
-🔗 *Link:* ${res.html_url}
-`);
-	} catch (err) {
-		console.error(err);
-		return m.reply('Coba lagi nanti.');
-	}
-}
-
-script.help = ['script'];
-script.tags = ['info'];
-script.command = ['sc', 'script', 'esce'];
-
-global.plugins['__Sc__By__AgusXzz__'] = script;
-
 async function filesInit() {
 	for (let filename of fs.readdirSync(pluginFolder).filter(pluginFilter)) {
 		try {
@@ -344,16 +297,11 @@ Object.freeze(global.reload);
 fs.watch(pluginFolder, global.reload);
 await global.reloadHandler();
 
-// Quick Test
+// Quick Test — hanya cek ffmpeg & find yang benar-benar dipakai
 async function _quickTest() {
 	let test = await Promise.all(
 		[
 			spawn('ffmpeg'),
-			spawn('ffprobe'),
-			spawn('ffmpeg', ['-hide_banner', '-loglevel', 'error', '-filter_complex', 'color', '-frames:v', '1', '-f', 'webp', '-']),
-			spawn('convert'),
-			spawn('magick'),
-			spawn('gm'),
 			spawn('find', ['--version']),
 		].map((p) => {
 			return Promise.race([
@@ -368,23 +316,11 @@ async function _quickTest() {
 			]);
 		})
 	);
-	let [ffmpeg, ffprobe, ffmpegWebp, convert, magick, gm, find] = test;
-	//console.log(test)
-	let s = (global.support = {
-		ffmpeg,
-		ffprobe,
-		ffmpegWebp,
-		convert,
-		magick,
-		gm,
-		find,
-	});
-	// require('./lib/sticker').support = s
+	let [ffmpeg, find] = test;
+	let s = (global.support = { ffmpeg, ffprobe: ffmpeg, ffmpegWebp: ffmpeg, convert: false, magick: false, gm: false, find });
 	Object.freeze(global.support);
 
 	if (!s.ffmpeg) conn.logger.warn('Please install ffmpeg for sending videos (apt install ffmpeg)');
-	if (s.ffmpeg && !s.ffmpegWebp) conn.logger.warn('Stickers may not animated without libwebp on ffmpeg (--enable-ibwebp while compiling ffmpeg)');
-	if (!s.convert && !s.magick && !s.gm) conn.logger.warn('Stickers may not work without imagemagick if libwebp on ffmpeg doesnt isntalled (apt install imagemagick)');
 }
 
 _quickTest()
@@ -401,6 +337,7 @@ function closeDB() {
 	}
 }
 process.on('uncaughtException', console.error);
+process.on('unhandledRejection', console.error);
 process.on('exit', closeDB);
 process.on('SIGINT', closeDB);
 process.on('SIGTERM', closeDB);

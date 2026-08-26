@@ -1,8 +1,8 @@
 import { ITEMS, hasItem, addItem, removeItem, fmt, itemLabel, sendBtn, BTN } from '../lib/rpg.js';
 
 const LIMIT_PRICE = 1000;
-const SHOP_OK = (i) => !i.crate && !i.pet && !i.story && !i.source && i.price;
-const EXCLUSIVE = (i) => i.story || ['event', 'boss'].includes(i.source);
+const SHOP_OK = (i) => i && !i.crate && !i.pet && !i.story && !i.source && i.price;
+const EXCLUSIVE = (i) => i?.story || ['event', 'boss'].includes(i?.source);
 
 let handler = async function (m, { command, text }) {
 	const user = global.db.data.users[m.sender];
@@ -23,6 +23,7 @@ let handler = async function (m, { command, text }) {
 	const n = Math.max(1, parseInt(qty) || 1);
 
 	if (command === 'buy') {
+		if (!id) return m.reply('Tentukan item yang mau dibeli. Lihat daftar: .shop\nContoh: .buy potion');
 		if (id === 'limit') {
 			const cost = LIMIT_PRICE * n;
 			if (user.money < cost) return m.reply(`Money tidak cukup. Butuh 💹 ${fmt(cost)}.`);

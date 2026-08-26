@@ -2,6 +2,8 @@ import moment from 'moment-timezone';
 import * as levelling from '../lib/levelling.js';
 import fs from 'fs';
 
+let menuImageCache = null;
+
 const handler = async (m, { conn, usedPrefix: _p, command, isOwner, args }) => {
 	const allTags = {
 		main: 'Main Menu',
@@ -136,7 +138,7 @@ const handler = async (m, { conn, usedPrefix: _p, command, isOwner, args }) => {
 		conn.sendButton(
 			m.chat,
 			{
-				image: fs.readFileSync('./media/menu.jpg'),
+				image: menuImageCache || (menuImageCache = fs.readFileSync('./media/menu.jpg')),
 				caption: style(text.replace(new RegExp(`%(${Object.keys(replace).sort((a, b) => b.length - a.length).join`|`})`, 'g'), (_, name) => '' + replace[name])),
 				footer: global.namebot,
 				buttons: [
