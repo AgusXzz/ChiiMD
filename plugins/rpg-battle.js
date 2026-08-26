@@ -40,7 +40,7 @@ async function soloAction(conn, m, user, state, command) {
 	const s = getStats(user);
 	const traits = traitsOf(user);
 	const lines = [];
-	let fled = false;
+	const fled = false;
 
 	if (traits.has('regen')) {
 		const heal = Math.round(s.maxHp * 0.03);
@@ -405,7 +405,7 @@ function endDuel(conn, m, state, winner) {
 
 // ============ MAIN ============
 
-let handler = async function (m, { command }) {
+const handler = async function (m, { command }) {
 	const user = global.db.data.users[m.sender];
 	const batt = this.battles || (this.battles = new Map());
 	const partyKey = m.chat + ':party';

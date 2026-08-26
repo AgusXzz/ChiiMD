@@ -1,6 +1,6 @@
 import { isYouTubeUrl, getInfo, getVideoUrl } from '../lib/ytdl.js';
 
-let handler = async (m, { usedPrefix, command, text }) => {
+const handler = async (m, { usedPrefix, command, text }) => {
 	if (!text) throw `Usage: ${usedPrefix + command} <YouTube Video URL>`;
 	if (!isYouTubeUrl(text)) throw '❌ URL bukan YouTube yang valid.';
 	m.react('🔁');

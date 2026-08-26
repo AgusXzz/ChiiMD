@@ -1,6 +1,6 @@
 import { fmt, sendBtn, BTN } from '../lib/rpg.js';
 
-let handler = async function (m, { command, text }) {
+const handler = async function (m, { command, text }) {
 	const user = global.db.data.users[m.sender];
 	const n = parseInt(text) || 0;
 	if (command === 'bank') {

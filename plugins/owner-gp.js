@@ -43,7 +43,7 @@ function getFileIcon(filename) {
 	return icons[ext] || '📄';
 }
 function listAllPlugins(baseDir) {
-	let availablePlugins = [];
+	const availablePlugins = [];
 	const items = fs.readdirSync(baseDir);
 	for (const item of items) {
 		const itemPath = path.join(baseDir, item);
@@ -137,7 +137,7 @@ async function sendPluginListMessage(conn, m, { bodyText, listTitle, pluginNames
 	);
 }
 
-let handler = async (m, { conn, text, usedPrefix, command }) => {
+const handler = async (m, { conn, text, usedPrefix, command }) => {
 	if (!text) {
 		return m.reply(
 			'📦 *Ambil Plugin*\n\n' +
@@ -199,7 +199,7 @@ let handler = async (m, { conn, text, usedPrefix, command }) => {
 		});
 	}
 
-	let code = fs.readFileSync(filePath, 'utf8');
+	const code = fs.readFileSync(filePath, 'utf8');
 	const stats = fs.statSync(filePath);
 	const _linesCount = code.split('\n').length;
 	const fileSize = stats.size;
@@ -212,9 +212,9 @@ let handler = async (m, { conn, text, usedPrefix, command }) => {
 	const lines = code.split('\n');
 
 	for (let i = 0; i < lines.length; i++) {
-		let line = lines[i];
+		const line = lines[i];
 		let highlightType = 0;
-		let trimmed = line.trim();
+		const trimmed = line.trim();
 
 		if (trimmed.startsWith('//') || trimmed.startsWith('/*') || trimmed.startsWith('*')) {
 			highlightType = 1;

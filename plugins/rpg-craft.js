@@ -1,6 +1,6 @@
 import { RECIPES, ITEMS, hasItem, addItem, removeItem, fmt } from '../lib/rpg.js';
 
-let handler = async (m, { command, text }) => {
+const handler = async (m, { command, text }) => {
 	const user = global.db.data.users[m.sender];
 	if (command === 'recipes') {
 		const list = RECIPES.map((r) => `${ITEMS[r.result].emoji} ${r.name} — ${r.need.map(([id, q]) => `${ITEMS[id].name} x${q}`).join(', ')}${r.money ? ` + 💹 ${fmt(r.money)}` : ''}`).join('\n');

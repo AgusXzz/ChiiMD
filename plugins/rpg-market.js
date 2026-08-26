@@ -1,6 +1,6 @@
 import { ITEMS, hasItem, addItem, removeItem, isPremium, expireMarket, fmt } from '../lib/rpg.js';
 
-let handler = async (m, { args }) => {
+const handler = async (m, { args }) => {
 	const user = global.db.data.users[m.sender];
 	const market = global.db.data.market;
 	const sub = (args[0] || '').toLowerCase();

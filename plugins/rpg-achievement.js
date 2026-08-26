@@ -1,6 +1,6 @@
 import { ACHIEVEMENTS, grantAchievements, fmt, itemLabel } from '../lib/rpg.js';
 
-let handler = async (m) => {
+const handler = async (m) => {
 	const user = global.db.data.users[m.sender];
 	const newly = grantAchievements(user);
 	const claimed = user.ach?.claimed || [];

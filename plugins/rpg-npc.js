@@ -8,7 +8,7 @@ const TRAIN = {
 	crit: { name: 'Crit', cost: 10000, unit: 1 },
 };
 
-let handler = async function (m, { args }) {
+const handler = async function (m, { args }) {
 	const user = global.db.data.users[m.sender];
 	const name = (args[0] || '').toLowerCase();
 	const npc = name ? NPC_LIST.find((n) => n.id === name || n.name.toLowerCase().includes(name)) : null;

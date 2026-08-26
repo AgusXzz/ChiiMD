@@ -1,5 +1,5 @@
-let handler = async (m, { conn, participants }) => {
-	let users = participants.map((u) => u.id).filter((v) => v !== conn.user.jid);
+const handler = async (m, { conn, participants }) => {
+	const users = participants.map((u) => u.id).filter((v) => v !== conn.user.jid);
 	if (!m.quoted) throw `✳️ Reply Pesan`;
 	conn.sendMessage(m.chat, { forward: m.quoted.fakeObj, mentions: users });
 };

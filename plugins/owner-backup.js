@@ -1,6 +1,6 @@
 import { runBackup } from '../lib/backup.js';
 
-let handler = async (m) => {
+const handler = async (m) => {
 	const dest = runBackup();
 	if (!dest) return m.reply('❌ Backup gagal. Cek log.');
 	return m.reply(`✅ Backup berhasil!\n📁 ${dest}`);

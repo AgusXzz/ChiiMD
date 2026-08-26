@@ -1,15 +1,15 @@
 import fs from 'fs';
 import syntaxError from 'syntax-error';
 
-let handler = async (m, { text, usedPrefix, command }) => {
+const handler = async (m, { text, usedPrefix, command }) => {
 	if (!text) throw `uhm.. teksnya mana?\n\npenggunaan:\n${usedPrefix + command} <teks>\n\ncontoh:\n${usedPrefix + command} plugins/file.js`;
 
 	if (!m.quoted?.text) throw `balas pesan nya!`;
 
-	let code = m.quoted.text;
-	let path = `./plugins/${text}.js`;
+	const code = m.quoted.text;
+	const path = `./plugins/${text}.js`;
 
-	let err = syntaxError(code, path, {
+	const err = syntaxError(code, path, {
 		sourceType: 'module',
 		allowAwaitOutsideFunction: true,
 	});

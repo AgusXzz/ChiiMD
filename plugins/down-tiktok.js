@@ -1,4 +1,4 @@
-let handler = async (m, { text, usedPrefix, command }) => {
+const handler = async (m, { text, usedPrefix, command }) => {
 	try {
 		const input = m.quoted ? m.quoted.text : text;
 		const regex = /(https:\/\/(vt|vm)\.tiktok\.com\/[^\s]+|https:\/\/www\.tiktok\.com\/@[\w.-]+\/video\/\d+)/;
@@ -6,10 +6,10 @@ let handler = async (m, { text, usedPrefix, command }) => {
 		const parseUrl = input.match(regex)?.[0];
 		if (parseUrl) {
 			m.react('🔁');
-			let res = await (await fetch(`https://www.tikwm.com/api/?url=${parseUrl}&hd=1`)).json();
+			const res = await (await fetch(`https://www.tikwm.com/api/?url=${parseUrl}&hd=1`)).json();
 			if (!res || !res.data) 'Gagal mengambil data dari TikTok.';
 
-			let data = res.data;
+			const data = res.data;
 			await m.reply(`# *TIKTOK DOWNLOADER*
 
 > *Judul*: ${data.title}
@@ -24,11 +24,11 @@ Mengirim.....`);
 
 			if (data.images && data.images.length > 0) {
 				if (data.images.length < 2) {
-					for (let img of data.images) {
+					for (const img of data.images) {
 						await conn.sendFile(m.chat, img, '', '', m);
 					}
 				} else {
-					let media = data.images.map((img) => ({
+					const media = data.images.map((img) => ({
 						image: { url: img },
 					}));
 					await conn.sendAlbumMessage(m.chat, media, { quoted: m });
@@ -51,11 +51,11 @@ Mengirim.....`);
 				m.reply('Musik tidak ditemukan, hanya akan mengirimkan media itu saja.');
 			}
 		} else if (input) {
-			let search = await (await fetch(`https://www.tikwm.com/api/feed/search?keywords=${input}&count=1&cursor=0&web=1&hd=1`)).json();
-			let video = search?.data?.videos[0];
+			const search = await (await fetch(`https://www.tikwm.com/api/feed/search?keywords=${input}&count=1&cursor=0&web=1&hd=1`)).json();
+			const video = search?.data?.videos[0];
 			if (!video) throw `Video tidak ditemukan untuk pencarian "${input}".`;
 
-			let caption = `# *TIKTOK PLAYER*
+			const caption = `# *TIKTOK PLAYER*
 
 > *Judul:* ${video.title}
 > *Region:* ${video.region}
@@ -67,7 +67,7 @@ Mengirim.....`);
 `.trim();
 			conn.sendFile(m.chat, 'https://www.tikwm.com' + video.play, '', caption, m);
 		} else {
-			let cmd = usedPrefix + command;
+			const cmd = usedPrefix + command;
 			m.reply(`*TIKTOK DOWNLOADER*
 > _*• Search:*_ \`${cmd} [query]\`
 > _*• Download:*_ \`${cmd} [link]\`

@@ -3,7 +3,7 @@ import { ITEMS, hasItem, removeItem, fmt, sendBtn, BTN } from '../lib/rpg.js';
 const TOOLS = ['pickaxe', 'axe', 'rod'];
 const EQ = ['weapon', 'armor', 'accessory'];
 
-let handler = async function (m, { text }) {
+const handler = async function (m, { text }) {
 	const user = global.db.data.users[m.sender];
 	const slot = (text || '').trim().toLowerCase();
 	if (![...TOOLS, ...EQ].includes(slot)) {

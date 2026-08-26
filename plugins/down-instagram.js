@@ -1,4 +1,4 @@
-let handler = async (m, { text, usedPrefix, command }) => {
+const handler = async (m, { text, usedPrefix, command }) => {
 	try {
 		const input = m.quoted ? m.quoted.text : text;
 		const regex = /(https?:\/\/(?:www\.)?instagram\.com\/(p|reel)\/[a-zA-Z0-9_-]+\/?)/;
@@ -30,7 +30,7 @@ let handler = async (m, { text, usedPrefix, command }) => {
 			conn.sendFile(m.chat, result[0].url, '', 'kyah', m);
 		}
 	} catch (err) {
-		console.error('Instagram Error:', err.message);
+		console.error('Instagram Error:', err?.message || err);
 		m.reply('Ada error waktu ambil media IG-nya~');
 	}
 };
@@ -54,9 +54,7 @@ async function igdl(url) {
 		}),
 	});
 
-	if (!res.ok) {
-		throw new Error(`HTTP error! Status: ${res.status}`);
-	}
+	if (!res.ok) throw `HTTP error! Status: ${res.status}`;
 
 	const json = await res.json();
 	return json?.data;

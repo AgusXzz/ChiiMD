@@ -1,12 +1,12 @@
 //Sumber Kode https://whatsapp.com/channel/0029Vb6D8o67YSd1UzflqU1d/1265
 
-let handler = async (m, { conn, args }) => {
+const handler = async (m, { conn, args }) => {
 	try {
 		if (!args[0]) throw '*Example :* .ssweb https://sfile.mobi';
-		let buff = await ssweb.capture(args[0]);
+		const buff = await ssweb.capture(args[0]);
 		conn.sendMessage(m.chat, { image: buff }, { quoted: m });
 	} catch (e) {
-		m.reply(e.message);
+		m.reply(e?.message || e);
 	}
 };
 

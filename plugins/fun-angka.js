@@ -1,4 +1,4 @@
-let handler = async (m, { conn, args }) => {
+const handler = async (m, { conn, args }) => {
 	const angkaUser = args[0];
 	const angkaValid = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'];
 
@@ -10,7 +10,7 @@ let handler = async (m, { conn, args }) => {
 
 	global.db.data.users[m.sender].exp += bonus;
 
-	let hasil = `
+	const hasil = `
 *「 🎲 TEBAK ANGKA 」*
 
 🎯 Angka Kamu : *${angkaUser}*

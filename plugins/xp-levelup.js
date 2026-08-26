@@ -1,6 +1,6 @@
 import { canLevelUp, xpRange } from '../lib/levelling.js';
 
-let handler = async (m) => {
+const handler = async (m) => {
 	const name = conn.getName(m.sender);
 	const user = global.db.data.users[m.sender];
 	const { min, xp, max } = xpRange(user.level, global.multiplier);
@@ -9,7 +9,7 @@ let handler = async (m) => {
 		await conn.reply(m.chat, `Level ${name} ${user.level} (${user.exp - min}/${xp})\nKurang ${max - user.exp} EXP lagi!`.trim(), m);
 	}
 
-	let before = user.level * 1;
+	const before = user.level * 1;
 
 	while (canLevelUp(user.level, user.exp, global.multiplier)) {
 		user.level++;

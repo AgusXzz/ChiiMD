@@ -1,6 +1,6 @@
-let handler = async (m, { usedPrefix, command, text }) => {
+const handler = async (m, { usedPrefix, command, text }) => {
 	if (!text) throw `Teksnya mana?\n\nContoh:\n${usedPrefix + command} Hi @user\n\n@user = User Tag\n@subject = Nama Group\n@desc = Deskripsi Group`;
-	let chat = global.db.data.chats[m.chat];
+	const chat = global.db.data.chats[m.chat];
 
 	switch (command) {
 		case 'setwelcome':

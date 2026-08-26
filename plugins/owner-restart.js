@@ -1,6 +1,6 @@
 import { parentPort } from 'worker_threads';
 
-let handler = async (m, { conn }) => {
+const handler = async (m, { conn }) => {
 	if (!parentPort) throw 'Dont: node main.js\nDo: node index.js';
 	if (global.conn.user.jid == conn.user.jid) {
 		await m.reply('```R E S T A R T . . .```');

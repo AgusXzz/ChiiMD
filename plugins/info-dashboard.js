@@ -1,14 +1,14 @@
-let handler = async (m) => {
+const handler = async (m) => {
 	let stats = Object.entries(db.data.stats)
 		.map(([key, val]) => {
-			let name = Array.isArray(plugins[key]?.help) ? plugins[key]?.help.join(' , ') : plugins[key]?.help || key;
+			const name = Array.isArray(plugins[key]?.help) ? plugins[key]?.help.join(' , ') : plugins[key]?.help || key;
 			if (/exec/.test(name)) return;
 			return { name, ...val };
 		})
 		.filter(Boolean);
 	stats = stats.sort((a, b) => b.total - a.total);
 
-	let handlers = stats
+	const handlers = stats
 		.slice(0, 50)
 		.map(({ name, total, last, success, lastSuccess }, i) => {
 			return `*${i + 1}.* *${name}*\n - *Hits* : ${total}\n - *Success* : ${success}\n - *Last Used* : ${getTime(last)}\n - *Last Success* : ${formatTime(lastSuccess)}`;
@@ -37,7 +37,7 @@ function getMonthName(month) {
 }
 
 function getTime(ms) {
-	var now = parseMs(+new Date() - ms);
+	const now = parseMs(+new Date() - ms);
 	if (now.days) return `${now.days} days ago`;
 	else if (now.hours) return `${now.hours} hours ago`;
 	else if (now.minutes) return `${now.minutes} minutes ago`;

@@ -1,4 +1,4 @@
-let handler = async (m, { text }) => {
+const handler = async (m, { text }) => {
 	if (!text) return m.reply('Masukkan namamu!');
 
 	m.reply(

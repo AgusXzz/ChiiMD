@@ -1,9 +1,9 @@
-let handler = async (m, { conn, usedPrefix, command, args, isOwner, isAdmin }) => {
+const handler = async (m, { conn, usedPrefix, command, args, isOwner, isAdmin }) => {
 	const isEnable = /^(true|enable|(turn)?on|1)$/i.test(command);
 	const chat = global.db.data.chats[m.chat];
 	const user = global.db.data.users[m.sender];
 	const settings = global.db.data.settings[conn.user.jid];
-	let type = (args[0] || '').toLowerCase();
+	const type = (args[0] || '').toLowerCase();
 	let isAll = false;
 	let isUser = false;
 

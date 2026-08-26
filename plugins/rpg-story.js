@@ -1,6 +1,6 @@
 import { CHAPTERS, storyFor, hasItem, removeItem, addItem, fmt, itemLabel, sendBtn, BTN } from '../lib/rpg.js';
 
-let handler = async function (m, { args }) {
+const handler = async function (m, { args }) {
 	const user = global.db.data.users[m.sender];
 	const sub = (args[0] || '').toLowerCase();
 	const c = storyFor(user);
@@ -21,7 +21,7 @@ let handler = async function (m, { args }) {
 
 	if (sub === 'next') {
 		if (st.bossDone) return m.reply('Bos sudah dikalahkan. Klaim hadiah: .story complete');
-		let claim = [];
+		const claim = [];
 		c.needs.forEach(([id, q], i) => {
 			if (st.done.includes(i)) return;
 			if (hasItem(user, id, q)) {

@@ -1,8 +1,8 @@
-let handler = async (m, { command }) => {
+const handler = async (m, { command }) => {
 	if (!m.quoted) throw 'Tag Pesan!';
 	if (!m.quoted.fileSha256) throw 'SHA256 Hash Missing';
-	let sticker = db.data.sticker;
-	let hash = m.quoted.fileSha256;
+	const sticker = db.data.sticker;
+	const hash = m.quoted.fileSha256;
 	if (!(hash in sticker)) throw 'Hash not found in database';
 	sticker[hash].locked = !/^un/i.test(command);
 	m.reply('Done!');

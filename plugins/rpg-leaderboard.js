@@ -1,6 +1,6 @@
 import { guildLevel, fmt, sendBtn, BTN } from '../lib/rpg.js';
 
-let handler = async function (m, { args }) {
+const handler = async function (m, { args }) {
 	const mode = (args[0] || 'level').toLowerCase();
 	if (mode === 'guild') {
 		const gs = Object.values(global.db.data.guilds).sort((a, b) => (b.exp || 0) - (a.exp || 0));

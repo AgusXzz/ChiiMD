@@ -1,5 +1,5 @@
 export function before(m) {
-	let user = global.db.data.users[m.sender];
+	const user = global.db.data.users[m.sender];
 	if (user?.afk > -1) {
 		m.reply(
 			`
@@ -10,13 +10,13 @@ Selama ${(new Date() - user.afk).toTimeString()}
 		user.afk = -1;
 		user.afkReason = '';
 	}
-	let jids = [...new Set([...(m.mentionedJid || []), ...(m.quoted ? [m.quoted.sender] : [])])];
-	for (let jid of jids) {
-		let user = global.db.data.users[jid];
+	const jids = [...new Set([...(m.mentionedJid || []), ...(m.quoted ? [m.quoted.sender] : [])])];
+	for (const jid of jids) {
+		const user = global.db.data.users[jid];
 		if (!user) continue;
-		let afkTime = user.afk;
+		const afkTime = user.afk;
 		if (!afkTime || afkTime < 0) continue;
-		let reason = user.afkReason;
+		const reason = user.afkReason;
 		m.reply(
 			`
 ${conn.getName(m.sender)} Jangan tag dia!

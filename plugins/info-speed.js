@@ -1,7 +1,7 @@
 import os from 'os';
 import fs from 'fs';
 
-let handler = async (m) => {
+const handler = async (m) => {
 	const start = Date.now();
 	await m.react('🍌');
 
@@ -10,7 +10,7 @@ let handler = async (m) => {
 	const usedMem = totalMem - freeMem;
 	const memPercent = ((usedMem / totalMem) * 100).toFixed(1);
 
-	let cap = `\`Server Information\`
+	const cap = `\`Server Information\`
 * Running On : ${process.env.USER === 'root' ? 'VPS' : 'HOSTING ( PANEL )'}
 * Home Dir : ${os.homedir()}
 * Tmp Dir : ${os.tmpdir()} *( ${fs.readdirSync(os.tmpdir()).length} Files )*
@@ -37,10 +37,10 @@ handler.command = ['ping', 'speed', 'os'];
 export default handler;
 
 function toTime(ms) {
-	let d = Math.floor(ms / 86400000);
-	let h = Math.floor((ms % 86400000) / 3600000);
-	let m = Math.floor((ms % 3600000) / 60000);
-	let s = Math.floor((ms % 60000) / 1000);
+	const d = Math.floor(ms / 86400000);
+	const h = Math.floor((ms % 86400000) / 3600000);
+	const m = Math.floor((ms % 3600000) / 60000);
+	const s = Math.floor((ms % 60000) / 1000);
 
 	return (d ? `${d}d ` : '') + (h ? `${h}h ` : '') + (m ? `${m}m ` : '') + (s ? `${s}s` : '');
 }

@@ -1,7 +1,7 @@
 import cp, { exec as _exec } from 'child_process';
 import { promisify } from 'util';
-let exec = promisify(_exec).bind(cp);
-let handler = async (m, { conn, command, text }) => {
+const exec = promisify(_exec).bind(cp);
+const handler = async (m, { conn, command, text }) => {
 	if (global.conn.user.jid != conn.user.jid) return;
 	const { key } = await m.reply('Executing...');
 	let o;
@@ -10,7 +10,7 @@ let handler = async (m, { conn, command, text }) => {
 	} catch (e) {
 		o = e;
 	} finally {
-		let { stdout, stderr } = o;
+		const { stdout, stderr } = o;
 		if (stdout.trim()) m.edit(stdout, key);
 		if (stderr.trim()) m.reply(stderr);
 	}

@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-let handler = async (m, { usedPrefix, command, text }) => {
+const handler = async (m, { usedPrefix, command, text }) => {
 	if (!text) throw `Usage: ${usedPrefix + command} Ela Vira Mortal`;
 	m.react('🔁');
 	try {
@@ -58,7 +58,7 @@ let handler = async (m, { usedPrefix, command, text }) => {
 			{ quoted: m }
 		);
 	} catch (e) {
-		return m.reply(e.message);
+		return m.reply(e?.message || e);
 	}
 };
 handler.help = ['yts'];
@@ -74,7 +74,7 @@ export default handler;
  * @param {string} query - Kata kunci pencarian
  */
 async function yts(query) {
-	if (!query) throw new Error('Query is required.');
+	if (!query) throw 'Query is required.';
 	const baseURL = 'https://www.devers-en-geste.fr/search';
 
 	try {
@@ -103,6 +103,6 @@ async function yts(query) {
 			thumbnail: `https://i.ytimg.com/vi/${item.id}/hqdefault.jpg`,
 		}));
 	} catch (error) {
-		throw new Error(error.message);
+		throw error.message || error;
 	}
 }

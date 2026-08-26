@@ -1,4 +1,4 @@
-let handler = async (m) => {
+const handler = async (m) => {
 	try {
 		const raw = await fetch('https://api.github.com/repos/AgusXzz/ChiiMD');
 		if (!raw.ok) return m.reply('Gagal Mendapatkan Info Repository');

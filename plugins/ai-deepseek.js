@@ -1,4 +1,4 @@
-let handler = async (m, { text, usedPrefix, command }) => {
+const handler = async (m, { text, usedPrefix, command }) => {
 	const input = m.quoted ? m.quoted.text : text;
 	if (!input) throw `Masukkan pertanyaan atau perintah!\n\nContoh:\n${usedPrefix + command} apa itu AI`;
 
@@ -37,16 +37,16 @@ export async function deepinfra(model, history) {
 				messages: history,
 			}),
 		});
-		if (!res.ok) throw new Error(`HTTP Error ${res.status}`);
+		if (!res.ok) throw `HTTP Error ${res.status}`;
 		const data = await res.json();
 
-		let teks = [];
-		for (let out of data?.choices || []) {
+		const teks = [];
+		for (const out of data?.choices || []) {
 			if (out.message?.content) teks.push(out.message.content);
 		}
 
 		return teks.join('\n');
 	} catch (e) {
-		throw new Error('Error' + e?.message);
+		throw 'Error' + (e?.message || e);
 	}
 }

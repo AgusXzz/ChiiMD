@@ -26,7 +26,7 @@ const couriers = [
 	{ code: 'kurir_tokopedia', name: 'Kurir Tokopedia' },
 ];
 
-let handler = async (m, { conn, args, usedPrefix, command }) => {
+const handler = async (m, { conn, args, usedPrefix, command }) => {
 	const el_api = 'f76b9f991fe424356b9c6da407792b1d1fbf33ad7a197bd0755b557a05461262';
 	//500 req/minggu, bikin aja sendiri gratis di https://api.binderbyte.com
 	//follow ig @elyas_tzy ya sayangkuhhh
@@ -35,9 +35,9 @@ let handler = async (m, { conn, args, usedPrefix, command }) => {
 	}
 
 	if (args.length == 1) {
-		let resi = args[0];
+		const resi = args[0];
 
-		let buttons = [
+		const buttons = [
 			{
 				name: 'single_select',
 				buttonParamsJson: JSON.stringify({
@@ -67,8 +67,8 @@ let handler = async (m, { conn, args, usedPrefix, command }) => {
 		);
 	}
 
-	let courier = args[0].toLowerCase();
-	let resi = args[1];
+	const courier = args[0].toLowerCase();
+	const resi = args[1];
 
 	if (!couriers.find((v) => v.code == courier)) {
 		return m.reply(`Kurir *${courier}* tidak tersedia`);
@@ -79,8 +79,8 @@ let handler = async (m, { conn, args, usedPrefix, command }) => {
 	}
 
 	try {
-		let res = await fetch(`https://api.binderbyte.com/v1/track?api_key=${el_api}&courier=${courier}&awb=${resi}`);
-		let elres = await res.json();
+		const res = await fetch(`https://api.binderbyte.com/v1/track?api_key=${el_api}&courier=${courier}&awb=${resi}`);
+		const elres = await res.json();
 
 		let teks = `📦 *TRACKING RESI*\n\n`;
 		teks += `Status: ${elres.status}\n`;

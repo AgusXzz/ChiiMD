@@ -1,6 +1,6 @@
 import { ITEMS, hasItem, addItem, removeItem, crateRandom, sendBtn, BTN, fmt } from '../lib/rpg.js';
 
-let handler = async function (m, { text }) {
+const handler = async function (m, { text }) {
 	const user = global.db.data.users[m.sender];
 	const arg = (text || '').trim().toLowerCase();
 

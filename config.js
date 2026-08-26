@@ -120,7 +120,7 @@ global.emoji = {
 	mana: '🔷',
 };
 
-let file = fileURLToPath(import.meta.url);
+const file = fileURLToPath(import.meta.url);
 watchFile(file, () => {
 	unwatchFile(file);
 	console.log(chalk.redBright("Update 'config.js'"));

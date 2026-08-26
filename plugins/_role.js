@@ -1,15 +1,15 @@
 import { canLevelUp } from '../lib/levelling.js';
 
-let handler = (m) => m;
+const handler = (m) => m;
 
 handler.before = function (m) {
-	let user = global.db.data.users[m.sender];
-	let before = user?.level * 1;
+	const user = global.db.data.users[m.sender];
+	const before = user?.level * 1;
 	if (user?.autolevelup) {
 		while (canLevelUp(user.level, user.exp, global.multiplier)) user.level++;
 	}
 
-	let role =
+	const role =
 		user.level <= 2
 			? 'Newbie ㋡'
 			: user.level >= 2 && user.level <= 4

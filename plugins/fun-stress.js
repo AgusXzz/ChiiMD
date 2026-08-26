@@ -1,4 +1,4 @@
-let handler = async (m, { text, command }) => {
+const handler = async (m, { text, command }) => {
 	if (!text) throw 'Namanya siapa?';
 	let awikwok;
 	if (command == 'genjot') {

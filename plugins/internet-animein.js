@@ -14,7 +14,7 @@ class Animein {
 			},
 			responseType: buffer ? 'arraybuffer' : 'json',
 		});
-		if (res.status !== 200) throw new Error('Terjadi kesalahan saat mengambil data');
+		if (res.status !== 200) throw 'Terjadi kesalahan saat mengambil data';
 
 		return buffer ? Buffer.from(res.data) : res.data?.data;
 	}
@@ -22,7 +22,7 @@ class Animein {
 	async schedule(day = 'senin') {
 		day = day.toLowerCase();
 		const days = ['senin', 'selasa', 'rabu', 'kamis', 'jumat', 'sabtu', 'minggu'];
-		if (!days.includes(day)) throw new Error('Hari tidak valid.\nList: ' + days.join(', '));
+		if (!days.includes(day)) throw 'Hari tidak valid.\nList: ' + days.join(', ');
 
 		return this.request(`${this.baseUrl}/api/proxy/3/2/schedule/data?day=${day}`);
 	}
@@ -51,7 +51,7 @@ class Animein {
 }
 
 const animein = new Animein();
-let handler = async (m, { conn, text, args, usedPrefix, command }) => {
+const handler = async (m, { conn, text, args, usedPrefix, command }) => {
 	const cmd = usedPrefix + command;
 	const type = args[0];
 
@@ -101,7 +101,7 @@ ${cmd} schedule(Jadwal Rilis)`;
 ${d.synopsis}
 `.trim();
 
-		let rows = episodes.map((v) => ({
+		const rows = episodes.map((v) => ({
 			title: `Episode ${v.index}`,
 			description: `ID: ${v.id}`,
 			id: `${cmd} getDL ${v.id}`,
@@ -225,7 +225,7 @@ Silakan pilih kualitas:
 
 	if (!res.movie?.length) throw `"${query}" tidak ditemukan`;
 
-	let rows = res.movie.slice(0, 15).map((v) => ({
+	const rows = res.movie.slice(0, 15).map((v) => ({
 		title: v.title,
 		description: `📅 ${v.year} | 📊 ${v.status}`,
 		id: `${cmd} detail ${v.id}|1`,

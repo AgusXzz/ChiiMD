@@ -2,13 +2,13 @@ import * as cheerio from 'cheerio';
 
 const mediaRegex = /https?:\/\/(www\.)?mediafire\.com\/(file|folder)\/(\w+)/;
 
-let handler = async (m, { conn, text, usedPrefix, command }) => {
+const handler = async (m, { conn, text, usedPrefix, command }) => {
 	if (!text) throw `Contoh:\n${usedPrefix}${command} https://www.mediafire.com/file/941xczxhn27qbby/GBWA_V12.25FF-By.SamMods-.apk/file`;
 	if (!mediaRegex.test(text)) throw 'Link tidak valid! Pastikan link Mediafire benar.';
 
 	try {
-		let res = await mediafire(text);
-		let caption = `
+		const res = await mediafire(text);
+		const caption = `
 *💌 Nama:* ${res.filename}
 *📊 Size:* ${res.sizeReadable}
 *🗂️ FileType :* ${res.filetype}

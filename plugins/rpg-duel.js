@@ -1,6 +1,6 @@
 import { BTN, sendBtn, getStats, duelText, duelBtns, fmt } from '../lib/rpg.js';
 
-let handler = async function (m, { command, args }) {
+const handler = async function (m, { command, args }) {
 	const user = global.db.data.users[m.sender];
 	if (command === 'duel') {
 		if (!user.class) return m.reply('Pilih kelas dulu: .kelas');

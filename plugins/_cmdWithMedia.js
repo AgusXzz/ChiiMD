@@ -4,11 +4,11 @@ export async function all(m, chatUpdate) {
 	if (m.isBaileys) return;
 	if (!m.message) return;
 	if (!m.msg?.fileSha256) return;
-	let hash = Buffer.from(m.msg.fileSha256).toString('base64');
+	const hash = Buffer.from(m.msg.fileSha256).toString('base64');
 	if (!(hash in global.db.data.sticker)) return;
 
-	let { text, mentionedJid } = global.db.data.sticker[hash];
-	let messages = await generateWAMessage(
+	const { text, mentionedJid } = global.db.data.sticker[hash];
+	const messages = await generateWAMessage(
 		m.sender,
 		{ text: text, mentions: mentionedJid },
 		{
@@ -21,7 +21,7 @@ export async function all(m, chatUpdate) {
 	messages.key.id = m.key.id;
 	messages.pushName = m.pushName;
 	if (m.isGroup) messages.key.participant = m.sender;
-	let msg = {
+	const msg = {
 		...chatUpdate,
 		messages: [proto.WebMessageInfo.create(messages)],
 		type: 'append',

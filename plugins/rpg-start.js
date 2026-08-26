@@ -38,7 +38,7 @@ function showProfile(conn, m, user) {
 	);
 }
 
-let handler = async function (m, { command, args }) {
+const handler = async function (m, { command, args }) {
 	const user = global.db.data.users[m.sender];
 	if (command === 'profile') return showProfile(this, m, user);
 

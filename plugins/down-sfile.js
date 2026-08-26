@@ -1,10 +1,10 @@
 import * as cheerio from 'cheerio';
 
-let handler = async (m, { conn, text }) => {
+const handler = async (m, { conn, text }) => {
 	if (!text) throw 'Input Query / Sfile Url!';
 
 	if (/https:\/\/sfile\.co\//i.test(text)) {
-		let res = await sfile.download(text, true);
+		const res = await sfile.download(text, true);
 		if (!res) throw 'Tidak Dapat Mengunduh File';
 
 		await m.reply(
@@ -24,8 +24,8 @@ let handler = async (m, { conn, text }) => {
 			{ quoted: m }
 		);
 	} else {
-		let [query, page] = text.split('|');
-		let res = await sfile.search(query, page);
+		const [query, page] = text.split('|');
+		const res = await sfile.search(query, page);
 		if (!res.length) throw `Query "${query}" not found`;
 
 		m.reply(
@@ -106,68 +106,64 @@ const sfile = {
 	},
 
 	download: async (url, resultBuffer = false) => {
-		try {
-			let h = sfile.createHeaders(url);
+		const h = sfile.createHeaders(url);
 
-			const init = await sfile.makeRequest(url, {
-				headers: h,
-			});
+		const init = await sfile.makeRequest(url, {
+			headers: h,
+		});
 
-			if (!init.ok) throw new Error(`Init request gagal (${init.status})`);
+		if (!init.ok) throw `Init request gagal (${init.status})`;
 
-			const htmlInit = await init.text();
+		const htmlInit = await init.text();
 
-			const ck = sfile.extractCookies(init.headers);
-			if (ck) h.Cookie = ck;
+		const ck = sfile.extractCookies(init.headers);
+		if (ck) h.Cookie = ck;
 
-			let $ = cheerio.load(htmlInit);
-			const meta = sfile.extractMetadata($);
+		let $ = cheerio.load(htmlInit);
+		const meta = sfile.extractMetadata($);
 
-			const dl = $('#download').attr('data-dw-url');
-			if (!dl) throw new Error('Download URL gak ketemu');
+		const dl = $('#download').attr('data-dw-url');
+		if (!dl) throw 'Download URL gak ketemu';
 
-			h.Referer = dl;
+		h.Referer = dl;
 
-			const proc = await sfile.makeRequest(dl, {
-				headers: h,
-			});
+		const proc = await sfile.makeRequest(dl, {
+			headers: h,
+		});
 
-			if (!proc.ok) throw new Error(`Process request gagal (${proc.status})`);
+		if (!proc.ok) throw `Process request gagal (${proc.status})`;
 
-			const htmlProc = await proc.text();
-			$ = cheerio.load(htmlProc);
+		const htmlProc = await proc.text();
+		$ = cheerio.load(htmlProc);
 
-			const scr = $('script')
-				.map((i, el) => $(el).html())
-				.get()
-				.join('\n');
+		const scr = $('script')
+			.map((i, el) => $(el).html())
+			.get()
+			.join('\n');
 
-			const re = /https:\\\/\\\/download\d+\.sfile\.co\\\/downloadfile\\\/\d+\\\/\d+\\\/[a-z0-9]+\\\/[^\s'"]+\.[a-z0-9]+(\?[^"']+)?/gi;
-			const mt = scr.match(re);
+		const re = /https:\\\/\\\/download\d+\.sfile\.co\\\/downloadfile\\\/\d+\\\/\d+\\\/[a-z0-9]+\\\/[^\s'"]+\.[a-z0-9]+(\?[^"']+)?/gi;
+		const mt = scr.match(re);
 
-			if (!mt?.length) throw new Error('Link download final gak ketemu di script');
+		if (!mt?.length) throw 'Link download final gak ketemu di script';
 
-			const fin = mt[0].replace(/\\\//g, '/');
+		const fin = mt[0].replace(/\\\//g, '/');
 
-			let download;
+		let download;
 
-			if (resultBuffer) {
-				const fileRes = await fetch(fin, { headers: h });
+		if (resultBuffer) {
+			const fileRes = await fetch(fin, { headers: h });
 
-				if (!fileRes.ok) throw new Error(`File download gagal (${fileRes.status})`);
+			if (!fileRes.ok) throw `File download gagal (${fileRes.status})`;
 
-				const arrayBuffer = await fileRes.arrayBuffer();
-				download = Buffer.from(arrayBuffer);
-			} else {
-				download = fin;
-			}
-
-			return {
-				metadata: meta,
-				download,
-			};
-		} catch (e) {
-			throw new Error(e.message);
+			const arrayBuffer = await fileRes.arrayBuffer();
+			download = Buffer.from(arrayBuffer);
+		} else {
+			download = fin;
 		}
+
+		return {
+			metadata: meta,
+			download,
+		};
 	},
 };

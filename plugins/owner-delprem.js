@@ -1,4 +1,4 @@
-let handler = async (m, { conn, text }) => {
+const handler = async (m, { conn, text }) => {
 	if (!text) throw 'Number?.';
 	let who;
 	if (m.isGroup) {
@@ -6,10 +6,10 @@ let handler = async (m, { conn, text }) => {
 		who = m.mentionedJid[0];
 	} else {
 		// Check if the input is a valid phone number
-		let phoneNumber = text.replace(/[^0-9]/g, ''); // Remove non-numeric characters
+		const phoneNumber = text.replace(/[^0-9]/g, ''); // Remove non-numeric characters
 		who = phoneNumber + '@s.whatsapp.net';
 	}
-	let users = global.db.data.users;
+	const users = global.db.data.users;
 	if (users[who]) {
 		users[who].premium = false;
 		users[who].premiumTime = 0;

@@ -8,18 +8,18 @@ import { createRequire } from 'module';
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const require = createRequire(__dirname);
 
-let handler = async (m, _2) => {
-	let { conn, usedPrefix, noPrefix, groupMetadata } = _2;
+const handler = async (m, _2) => {
+	const { conn, usedPrefix, noPrefix, groupMetadata } = _2;
 	let _return;
 	let _syntax = '';
-	let _text = (/^=/.test(usedPrefix) ? 'return ' : '') + noPrefix;
-	let old = m.exp * 1;
+	const _text = (/^=/.test(usedPrefix) ? 'return ' : '') + noPrefix;
+	const old = m.exp * 1;
 	try {
 		let i = 15;
-		let f = {
+		const f = {
 			exports: {},
 		};
-		let exec = new (async () => {}).constructor('print', 'm', 'require', 'conn', 'baileys', 'groupMetadata', 'module', 'exports', 'argument', _text);
+		const exec = new (async () => {}).constructor('print', 'm', 'require', 'conn', 'baileys', 'groupMetadata', 'module', 'exports', 'argument', _text);
 		_return = await exec.call(
 			conn,
 			(...args) => {
@@ -37,7 +37,7 @@ let handler = async (m, _2) => {
 			[conn, _2]
 		);
 	} catch (e) {
-		let err = syntaxerror(_text, 'Execution Function', {
+		const err = syntaxerror(_text, 'Execution Function', {
 			allowReturnOutsideFunction: true,
 			allowAwaitOutsideFunction: true,
 			sourceType: 'module',

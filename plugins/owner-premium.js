@@ -1,4 +1,4 @@
-let handler = async (m, { args, usedPrefix, command }) => {
+const handler = async (m, { args, usedPrefix, command }) => {
 	let who;
 	if (m.quoted) {
 		who = m.quoted.sender;
@@ -10,7 +10,7 @@ let handler = async (m, { args, usedPrefix, command }) => {
 
 	if (!who) throw `Siapa yang ingin diubah status premium-nya?`;
 
-	let user = db.data.users[who];
+	const user = db.data.users[who];
 
 	switch (command) {
 		case 'addprem':
@@ -25,10 +25,10 @@ let handler = async (m, { args, usedPrefix, command }) => {
 				await conn.reply(who, `✨ *Premium Info*\n\n*Nama:* ${user.name}\n*Status Premium:* Permanen\n*Tanggal:* ${new Date().toLocaleDateString()}`, null);
 			} else {
 				if (isNaN(args[0])) throw `⚠️ Hanya Nomor!\n\nContoh:\n${usedPrefix + command} 30 @${m.sender.split`@`[0]}`;
-				let txt = args[0];
-				let jumlahHari = 86400000 * txt;
+				const txt = args[0];
+				const jumlahHari = 86400000 * txt;
 
-				let now = new Date();
+				const now = new Date();
 				if (now < user.premiumTime) {
 					user.premiumTime += jumlahHari;
 				} else {
@@ -36,7 +36,7 @@ let handler = async (m, { args, usedPrefix, command }) => {
 				}
 				user.premium = true;
 
-				let tanggalBerakhir = new Date(user.premiumTime).toLocaleDateString();
+				const tanggalBerakhir = new Date(user.premiumTime).toLocaleDateString();
 
 				await m.reply(`✅ *Success* \n\n*Nama:* ${user.name}\n*Durasi:* ${txt} Hari\n*Mulai:* ${now.toLocaleDateString()}\n*Berakhir:* ${tanggalBerakhir}`);
 				await conn.reply(who, `✨ *Premium Info*\n\n*Nama:* ${user.name}\n*Durasi:* ${txt} Hari\n*Mulai:* ${now.toLocaleDateString()}\n*Berakhir:* ${tanggalBerakhir}`, null);

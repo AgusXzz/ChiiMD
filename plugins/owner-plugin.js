@@ -1,4 +1,4 @@
-let handler = async (m, { args }) => {
+const handler = async (m, { args }) => {
 	const sub = (args[0] || '').toLowerCase();
 	if (sub === 'list') {
 		const rows = Object.entries(global.plugins)

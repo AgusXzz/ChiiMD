@@ -1,12 +1,12 @@
-let handler = async (m, { conn, usedPrefix, command, text }) => {
+const handler = async (m, { conn, usedPrefix, command, text }) => {
 	conn.khodam = conn.khodam || {};
 
 	if (!text) return m.reply(`Masukkan nama kamu!\n\nContoh:\n${usedPrefix + command} Abay gay`);
 
-	let data = conn.khodam[text] || pickRandom(khodamList);
+	const data = conn.khodam[text] || pickRandom(khodamList);
 	conn.khodam[text] = data;
 
-	let result = `
+	const result = `
 👤 Nama: *${text}*
 🔮 Khodam kamu adalah: *${data.nama}*
 

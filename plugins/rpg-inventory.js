@@ -1,6 +1,6 @@
 import { ITEMS, getStats, hasItem, addItem, removeItem, fmt, itemLabel, useBuff, buffText, activeBuff, TRAIT_DESC } from '../lib/rpg.js';
 
-let handler = async (m, { command, text }) => {
+const handler = async (m, { command, text }) => {
 	const user = global.db.data.users[m.sender];
 	const arg = (text || '').trim().toLowerCase();
 

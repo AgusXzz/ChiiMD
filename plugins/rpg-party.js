@@ -1,6 +1,6 @@
 import { areaById, pick, scaledMob, sendBtn, battleButtons, partyBattleText, BTN } from '../lib/rpg.js';
 
-let handler = async function (m, { args }) {
+const handler = async function (m, { args }) {
 	if (!m.isGroup) return m.reply('Party hanya bisa dibuat di grup.');
 	this.parties = this.parties || new Map();
 	const party = this.parties.get(m.chat);

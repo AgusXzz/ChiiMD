@@ -252,9 +252,9 @@ const pluginFilter = (filename) => /\.js$/.test(filename);
 global.plugins = {};
 
 async function filesInit() {
-	for (let filename of fs.readdirSync(pluginFolder).filter(pluginFilter)) {
+	for (const filename of fs.readdirSync(pluginFolder).filter(pluginFilter)) {
 		try {
-			let file = global.__filename(join(pluginFolder, filename));
+			const file = global.__filename(join(pluginFolder, filename));
 			const module = await import(file);
 			global.plugins[filename] = module.default || module;
 		} catch (e) {
@@ -269,7 +269,7 @@ filesInit()
 
 global.reload = async (_ev, filename) => {
 	if (pluginFilter(filename)) {
-		let dir = global.__filename(join(pluginFolder, filename), true);
+		const dir = global.__filename(join(pluginFolder, filename), true);
 		if (filename in global.plugins) {
 			if (fs.existsSync(dir)) conn.logger.info(`re - require plugin '${filename}'`);
 			else {
@@ -277,7 +277,7 @@ global.reload = async (_ev, filename) => {
 				return delete global.plugins[filename];
 			}
 		} else conn.logger.info(`requiring new plugin '${filename}'`);
-		let err = syntaxerror(fs.readFileSync(dir), filename, {
+		const err = syntaxerror(fs.readFileSync(dir), filename, {
 			sourceType: 'module',
 			allowAwaitOutsideFunction: true,
 		});
@@ -299,11 +299,8 @@ await global.reloadHandler();
 
 // Quick Test — hanya cek ffmpeg & find yang benar-benar dipakai
 async function _quickTest() {
-	let test = await Promise.all(
-		[
-			spawn('ffmpeg'),
-			spawn('find', ['--version']),
-		].map((p) => {
+	const test = await Promise.all(
+		[spawn('ffmpeg'), spawn('find', ['--version'])].map((p) => {
 			return Promise.race([
 				new Promise((resolve) => {
 					p.on('close', (code) => {
@@ -316,8 +313,8 @@ async function _quickTest() {
 			]);
 		})
 	);
-	let [ffmpeg, find] = test;
-	let s = (global.support = { ffmpeg, ffprobe: ffmpeg, ffmpegWebp: ffmpeg, convert: false, magick: false, gm: false, find });
+	const [ffmpeg, find] = test;
+	const s = (global.support = { ffmpeg, ffprobe: ffmpeg, ffmpegWebp: ffmpeg, convert: false, magick: false, gm: false, find });
 	Object.freeze(global.support);
 
 	if (!s.ffmpeg) conn.logger.warn('Please install ffmpeg for sending videos (apt install ffmpeg)');

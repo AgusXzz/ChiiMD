@@ -1,4 +1,4 @@
-let handler = async (m, { text, conn }) => {
+const handler = async (m, { text, conn }) => {
 	if (!text) throw 'Masukkan text\n\nContoh:\n.brat abay dan senn';
 	try {
 		const url = 'https://shinana-brat.hf.space/?text=' + encodeURIComponent(text);

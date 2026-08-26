@@ -3,7 +3,7 @@ import sizeOf from 'image-size';
 
 const BASE = 'https://api.shngm.io/v1';
 
-let handler = async (m, { conn, text, args, usedPrefix, command }) => {
+const handler = async (m, { conn, text, args, usedPrefix, command }) => {
 	if (!text) throw '❌ Masukkan judul manhwa';
 
 	const cmd = usedPrefix + command;
@@ -38,7 +38,7 @@ let handler = async (m, { conn, text, args, usedPrefix, command }) => {
 ${d.description}
 `.trim();
 
-		let rows = chapters?.data?.map((v) => ({
+		const rows = chapters?.data?.map((v) => ({
 			title: `Chapter ${v.chapter_number}`,
 			description: new Date(v.release_date).toLocaleDateString('id-ID'),
 			id: `${cmd} read ${v.chapter_id}`,
@@ -102,7 +102,7 @@ ${d.description}
 				{ quoted: m }
 			);
 		} catch (e) {
-			return m.reply(e.message);
+			return m.reply(e?.message || e);
 		}
 	}
 
@@ -113,7 +113,7 @@ ${d.description}
 
 	if (!res.data?.length) throw `"${query}" tidak ditemukan`;
 
-	let rows = res.data.map((v) => ({
+	const rows = res.data.map((v) => ({
 		title: v.title,
 		description: `⭐ ${v.user_rate} | 👀 ${v.view_count.toLocaleString()}`,
 		id: `${cmd} detail ${v.manga_id}|1`,
@@ -162,7 +162,7 @@ export default handler;
 
 async function getJSON(url) {
 	const res = await fetch(url);
-	if (!res.ok) throw new Error(`Fetch error ${res.status} ${res.statusText}`);
+	if (!res.ok) throw `Fetch error ${res.status} ${res.statusText}`;
 	return res.json();
 }
 
@@ -174,7 +174,7 @@ async function getBuffer(url) {
 	});
 
 	if (!res.ok) {
-		throw new Error(`Image fetch error ${res.status} ${res.statusText}`);
+		throw `Image fetch error ${res.status} ${res.statusText}`;
 	}
 
 	return Buffer.from(await res.arrayBuffer());

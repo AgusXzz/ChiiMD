@@ -1,4 +1,4 @@
-let handler = async (m, { conn, text, participants }) => {
+const handler = async (m, { conn, text, participants }) => {
 	conn.reply(m.chat, text, m, { mentions: participants.map((a) => a.id) });
 };
 

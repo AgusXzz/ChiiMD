@@ -1,4 +1,4 @@
-let handler = async (m, { conn, usedPrefix, command, args: [event] }) => {
+const handler = async (m, { conn, usedPrefix, command, args: [event] }) => {
 	if (!event)
 		return await conn.reply(
 			m.chat,
@@ -9,7 +9,7 @@ ${usedPrefix + command} promote @user
 ${usedPrefix + command} demote @user`.trim(),
 			m
 		);
-	let part = m.mentionedJid[0] || m.sender;
+	const part = m.mentionedJid[0] || m.sender;
 	let act = false;
 	m.reply(`*Simulating ${event}...*`);
 	switch (event.toLowerCase()) {

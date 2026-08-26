@@ -2,7 +2,7 @@ import { ITEMS, hasItem, addItem, removeItem } from '../lib/rpg.js';
 
 const FOOD = ['meat', 'steak', 'fish_sardine', 'fish_salmon', 'fish_shark'];
 
-let handler = async (m, { args }) => {
+const handler = async (m, { args }) => {
 	const user = global.db.data.users[m.sender];
 	const sub = (args[0] || '').toLowerCase();
 	const owned = Object.entries(user.inventory).filter(([id]) => ITEMS[id]?.type === 'pet');

@@ -4,8 +4,8 @@
 import { createRequire } from 'module';
 const require = createRequire(import.meta.url);
 const { Akinator } = require('@aqul/akinator-api');
-let handler = async function (m, { conn }) {
-	let id = m.chat;
+const handler = async function (m, { conn }) {
+	const id = m.chat;
 	if (!conn.akinator) conn.akinator = new Map();
 	if (conn.akinator.has(id)) throw '🎯 Game Akinator sudah berjalan di chat ini.\nTekan tombol *Nyerah* untuk berhenti.';
 	try {
@@ -40,7 +40,7 @@ let handler = async function (m, { conn }) {
 };
 
 handler.before = async function (m) {
-	let id = m.chat;
+	const id = m.chat;
 
 	if (!this.akinator || !this.akinator.has(id)) return;
 	if (!m.text) return;
@@ -70,7 +70,7 @@ handler.before = async function (m) {
 		'mungkin tidak': 4,
 	};
 
-	let answer = answerMap[m.text.toLowerCase().trim()];
+	const answer = answerMap[m.text.toLowerCase().trim()];
 
 	if (answer === undefined) {
 		session.processing = false;

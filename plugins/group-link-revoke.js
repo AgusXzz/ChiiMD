@@ -1,4 +1,4 @@
-let handler = async (m, { command }) => {
+const handler = async (m, { command }) => {
 	if (command === 'linkgc') {
 		m.reply('https://chat.whatsapp.com/' + (await conn.groupInviteCode(m.chat)));
 	}

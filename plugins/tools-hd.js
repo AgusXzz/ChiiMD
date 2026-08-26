@@ -2,11 +2,11 @@ import axios from 'axios';
 import FormData from 'form-data';
 import { delay } from 'baileys';
 
-let handler = async (m, { usedPrefix, command }) => {
-	let quoted = m.quoted ? m.quoted : m;
-	let mime = (quoted.msg || quoted).mimetype;
+const handler = async (m, { usedPrefix, command }) => {
+	const quoted = m.quoted ? m.quoted : m;
+	const mime = (quoted.msg || quoted).mimetype;
 	if (!/image/.test(mime)) throw `Kirim/Reply Foto Dengan Caption ${usedPrefix + command}`;
-	let media = await quoted.download();
+	const media = await quoted.download();
 	let res;
 	if (/^hdr$/i.test(command)) {
 		res = await upscale(media, 4);
@@ -33,10 +33,10 @@ async function upscale(buffer, rasio = 2) {
 		},
 	});
 
-	if (upload.status !== 200) throw new Error('Gagal Upload Image');
+	if (upload.status !== 200) throw 'Gagal Upload Image';
 
 	for (let i = 0; i < 20; i++) {
-		if (i === 19) throw new Error('Timeout: server upscaler terlalu lama merespons');
+		if (i === 19) throw 'Timeout: server upscaler terlalu lama merespons';
 		await new Promise((resolve) => setTimeout(resolve, 3000));
 
 		const check = await axios.post(
@@ -61,5 +61,5 @@ async function upscale(buffer, rasio = 2) {
 		await delay(5000);
 	}
 
-	throw new Error('Upscale Timeout');
+	throw 'Upscale Timeout';
 }

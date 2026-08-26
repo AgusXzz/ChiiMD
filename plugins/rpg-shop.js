@@ -4,7 +4,7 @@ const LIMIT_PRICE = 1000;
 const SHOP_OK = (i) => i && !i.crate && !i.pet && !i.story && !i.source && i.price;
 const EXCLUSIVE = (i) => i?.story || ['event', 'boss'].includes(i?.source);
 
-let handler = async function (m, { command, text }) {
+const handler = async function (m, { command, text }) {
 	const user = global.db.data.users[m.sender];
 
 	if (command === 'shop') {

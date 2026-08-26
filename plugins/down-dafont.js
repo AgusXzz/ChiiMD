@@ -2,8 +2,8 @@
 //izin wm min
 import * as cheerio from 'cheerio';
 
-let handler = async (m, { conn, args }) => {
-	let cmd = args[0]?.toLowerCase();
+const handler = async (m, { conn, args }) => {
+	const cmd = args[0]?.toLowerCase();
 
 	if (!cmd)
 		throw `*Gunakan Salah Satu Command Ini*
@@ -25,7 +25,7 @@ let handler = async (m, { conn, args }) => {
 			try {
 				m.reply('🔍 Searching fonts...');
 
-				let result = await dafont(query);
+				const result = await dafont(query);
 				if (!result.length) throw `Font "${query}" tidak ditemukan`;
 
 				let teks = `*『 DAFONT SEARCH 』*`;
@@ -87,7 +87,7 @@ let handler = async (m, { conn, args }) => {
 async function dafont(query) {
 	const res = await fetch('https://www.dafont.com/search.php?q=' + encodeURIComponent(query));
 
-	if (!res.ok) throw new Error(`Status ${res.status}`);
+	if (!res.ok) throw `Status ${res.status}`;
 
 	const data = await res.text();
 	const $ = cheerio.load(data);

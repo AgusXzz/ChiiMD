@@ -2,7 +2,7 @@ import { areaById, pick, scaledMob, rollLoot, applyLoot, startBattle, onCooldown
 
 const AGAIN = [BTN('🌿 Jelajah lagi', '.explore')];
 
-let handler = async function (m) {
+const handler = async function (m) {
 	const user = global.db.data.users[m.sender];
 	if (!user.class) return m.reply('Pilih kelas dulu: .kelas');
 	if (onCooldown(user, 'explore', cdMs(user, 90 * 1000), m, 'explore')) return;

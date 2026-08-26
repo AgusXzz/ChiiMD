@@ -1,6 +1,6 @@
 import { delay } from 'baileys';
 
-let handler = async (m, { text }) => {
+const handler = async (m, { text }) => {
 	if (!text) return m.reply('Kirim: .broadcast <pesan>\nMode: .broadcast group/user/owner <pesan>');
 	let mode = 'group';
 	let msg = text;

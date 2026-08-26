@@ -1,4 +1,4 @@
-let handler = async (m, { text }) => {
+const handler = async (m, { text }) => {
 	if (!text) throw 'Who wants to be banned?';
 	let who;
 	if (m.isGroup) who = m.mentionedJid[0];

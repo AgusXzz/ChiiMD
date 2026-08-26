@@ -1,6 +1,6 @@
 import { DAILY_GOALS, WEEKLY_GOALS, addItem, fmt, sendBtn, BTN } from '../lib/rpg.js';
 
-let handler = async function (m, { command }) {
+const handler = async function (m, { command }) {
 	const user = global.db.data.users[m.sender];
 	const d = user.quest.daily || {};
 	const w = user.quest.weekly || {};

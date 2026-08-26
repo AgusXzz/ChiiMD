@@ -1,13 +1,13 @@
-let handler = async (m, { text }) => {
-	let q = m.quoted ? m.quoted : m;
-	let mime = (q.msg || q).mimetype || '';
+const handler = async (m, { text }) => {
+	const q = m.quoted ? m.quoted : m;
+	const mime = (q.msg || q).mimetype || '';
 
 	if (/image|video|webp/.test(mime)) {
 		if ((q.msg?.seconds || q.seconds) > 10) {
 			return m.reply('Video harus berdurasi di bawah 10 detik.');
 		}
 
-		let media = await q.download();
+		const media = await q.download();
 		let exif;
 		if (text) {
 			const [packname, author] = text.split(/[,|\-+&]/);

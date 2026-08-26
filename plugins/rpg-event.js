@@ -1,6 +1,6 @@
 import { eventState, eventText, getStats, attack, onCooldown, addItem, grantAchievements, fmt, sendBtn, BTN } from '../lib/rpg.js';
 
-let handler = async function (m, { args }) {
+const handler = async function (m, { args }) {
 	const user = global.db.data.users[m.sender];
 	const sub = (args[0] || '').toLowerCase();
 	const ev = eventState(this);

@@ -1,6 +1,6 @@
 import { CROPS, ITEMS, farmSlots, hasItem, addItem, removeItem, questTrack, guildExp, grantAchievements, sendBtn, BTN } from '../lib/rpg.js';
 
-let handler = async function (m, { command, text }) {
+const handler = async function (m, { command, text }) {
 	const user = global.db.data.users[m.sender];
 	const farm = user.farm;
 	const cap = farmSlots(user);

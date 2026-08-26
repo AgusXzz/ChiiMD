@@ -1,6 +1,6 @@
 import { fmt } from '../lib/rpg.js';
 
-let handler = async (m, { text }) => {
+const handler = async (m, { text }) => {
 	const user = global.db.data.users[m.sender];
 	const target = m.quoted ? m.quoted.sender : m.mentionedJid[0];
 	if (!target) return m.reply('Tag penerima: .transfer @user <money>');

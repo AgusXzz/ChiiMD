@@ -1,7 +1,7 @@
 import { isYouTubeUrl, getInfo, getAudioUrl } from '../lib/ytdl.js';
 import { toAudio } from '../lib/converter.js';
 
-let handler = async (m, { usedPrefix, command, text }) => {
+const handler = async (m, { usedPrefix, command, text }) => {
 	if (!text) throw `Usage: ${usedPrefix + command} <YouTube URL>`;
 	if (!isYouTubeUrl(text)) throw '❌ URL bukan YouTube yang valid.';
 	m.react('🔁');

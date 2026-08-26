@@ -1,8 +1,8 @@
-let handler = async (m) => {
+const handler = async (m) => {
 	const res = await fetch('https://raw.githubusercontent.com/BochilTeam/database/master/kata-kata/dare.json');
 	const result = await res.json();
 
-	let dare = result.getRandom();
+	const dare = result.getRandom();
 	m.reply(dare);
 };
 handler.help = ['dare'];
