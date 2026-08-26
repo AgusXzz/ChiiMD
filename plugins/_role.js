@@ -6,7 +6,8 @@ handler.before = function (m) {
 	const user = global.db.data.users[m.sender];
 	const before = user?.level * 1;
 	if (user?.autolevelup) {
-		while (canLevelUp(user.level, user.exp, global.multiplier)) user.level++;
+		let guard = 1000;
+		while (canLevelUp(user.level, user.exp, global.multiplier) && guard-- > 0) user.level++;
 	}
 
 	const role =

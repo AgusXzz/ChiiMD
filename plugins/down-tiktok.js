@@ -7,7 +7,7 @@ const handler = async (m, { text, usedPrefix, command }) => {
 		if (parseUrl) {
 			m.react('🔁');
 			const res = await (await fetch(`https://www.tikwm.com/api/?url=${parseUrl}&hd=1`)).json();
-			if (!res || !res.data) 'Gagal mengambil data dari TikTok.';
+			if (!res || !res.data) throw 'Gagal mengambil data dari TikTok.';
 
 			const data = res.data;
 			await m.reply(`# *TIKTOK DOWNLOADER*

@@ -1,4 +1,4 @@
-import { DAILY_GOALS, WEEKLY_GOALS, addItem, fmt, sendBtn, BTN } from '../lib/rpg.js';
+import { DAILY_GOALS, WEEKLY_GOALS, addItem, fmt, sendBtn, BTN, getWeek } from '../lib/rpg.js';
 
 const handler = async function (m, { command }) {
 	const user = global.db.data.users[m.sender];
@@ -29,10 +29,10 @@ const handler = async function (m, { command }) {
 
 	if (command === 'weekly') {
 		const week = (user.quest.weekly || {}).week;
-		if (week === getWeekNow()) return m.reply('Sudah klaim minggu ini.');
+		if (week === getWeek(new Date())) return m.reply('Sudah klaim minggu ini.');
 		const ok = Object.keys(WEEKLY_GOALS).every((k) => (w[k] || 0) >= WEEKLY_GOALS[k]);
 		if (!ok) return m.reply('Quest mingguan belum selesai.');
-		user.quest.weekly = { week: getWeekNow() };
+		user.quest.weekly = { week: getWeek(new Date()) };
 		user.money += 5000;
 		user.limit += 20;
 		addItem(user, 'crate_mythic', 1);
@@ -40,14 +40,6 @@ const handler = async function (m, { command }) {
 		return m.reply(`🎁 *Weekly reward!*\n💹 +${fmt(5000)}\n🎫 +20 limit\nCrate Mythic x1\nGold x10`);
 	}
 };
-
-function getWeekNow() {
-	const d = new Date();
-	d.setHours(0, 0, 0, 0);
-	d.setDate(d.getDate() + 4 - (d.getDay() || 7));
-	const yearStart = new Date(d.getFullYear(), 0, 1);
-	return Math.ceil(((d - yearStart) / 86400000 + 1) / 7);
-}
 
 handler.help = ['quest', 'daily', 'weekly'];
 handler.tags = ['rpg'];

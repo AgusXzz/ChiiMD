@@ -41,7 +41,12 @@ async function processMessage(rawMsg, chatUpdate) {
 
 		if (typeof m.text !== 'string') m.text = '';
 
-		const isROwner = [conn.decodeJid(global.conn.user.id), ...global.owner.map(([number]) => number)].map((v) => v.replace(/[^0-9]/g, '') + '@s.whatsapp.net').includes(m.sender);
+		const isROwner = (() => {
+			if (!process._ownerJids) {
+				process._ownerJids = [conn.decodeJid(global.conn.user.id), ...global.owner.map(([number]) => number)].map((v) => v.replace(/[^0-9]/g, '') + '@s.whatsapp.net');
+			}
+			return process._ownerJids.includes(m.sender);
+		})();
 		const isOwner = isROwner || m.fromMe;
 		const isPrems = isROwner || db.data.users[m.sender]?.premiumTime > 0;
 
@@ -63,6 +68,8 @@ async function processMessage(rawMsg, chatUpdate) {
 		const isBotAdmin = bot?.admin || false; // Are you Admin?
 
 		const ___dirname = path.join(path.dirname(fileURLToPath(import.meta.url)), './plugins');
+		const str2Regex = (str) => str.replace(/[|\\{}()[\]^$+*?.]/g, '\\$&');
+		const defaultPrefix = conn.prefix ? conn.prefix : global.prefix;
 		for (const name in global.plugins) {
 			const plugin = global.plugins[name];
 			if (!plugin) continue;
@@ -84,12 +91,7 @@ async function processMessage(rawMsg, chatUpdate) {
 					}
 				}
 			}
-			if (plugin.tags && plugin.tags.includes('admin')) {
-				// global.dfail('restrict', m, this)
-				continue;
-			}
-			const str2Regex = (str) => str.replace(/[|\\{}()[\]^$+*?.]/g, '\\$&');
-			const _prefix = plugin.customPrefix ? plugin.customPrefix : conn.prefix ? conn.prefix : global.prefix;
+			const _prefix = plugin.customPrefix ? plugin.customPrefix : defaultPrefix;
 			const match = (
 				_prefix instanceof RegExp // RegExp Mode?
 					? [[_prefix.exec(m.text), _prefix]]
@@ -153,7 +155,7 @@ async function processMessage(rawMsg, chatUpdate) {
 				m.plugin = name;
 				if (!isOwner && (m.chat in global.db.data.chats || m.sender in global.db.data.users)) {
 					const chat = global.db.data.chats[m.chat];
-					if (name != 'tools-delete.js' && chat?.isBanned) return; // Except this
+					if (chat?.isBanned) continue;
 				}
 				if (plugin.rowner && plugin.owner && !(isROwner || isOwner)) {
 					// Both Owner
@@ -316,7 +318,7 @@ async function processMessage(rawMsg, chatUpdate) {
 export async function participantsUpdate({ id, participants, action, simulate = false }) {
 	// if (id in conn.chats) return // First login will spam
 	if (this.isInit && !simulate) return;
-	if (global.db.data == null) await loadDatabase();
+	if (global.db.data == null) await global.loadDatabase();
 	const chat = global.db.data.chats[id] || {};
 	let text = '';
 	const groupMetadata = (conn.chats[id] || {}).metadata || (await this.groupMetadata(id));

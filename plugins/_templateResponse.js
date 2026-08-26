@@ -21,7 +21,13 @@ export async function all(m, chatUpdate) {
 								: m.mtype == 'templateButtonReplyMessage'
 									? m.message.templateButtonReplyMessage.selectedId
 									: m.mtype == 'interactiveResponseMessage'
-										? JSON.parse(m.msg.nativeFlowResponseMessage.paramsJson).id
+										? (() => {
+												try {
+													return JSON.parse(m.msg.nativeFlowResponseMessage.paramsJson).id;
+												} catch {
+													return '';
+												}
+											})()
 										: m.mtype === 'messageContextInfo'
 											? m.message.buttonsResponseMessage?.selectedButtonId || m.message.listResponseMessage?.singleSelectReply.selectedRowId || m.text
 											: '';

@@ -20,7 +20,7 @@ export async function before(m, { isAdmin, isOwner, isBotAdmin }) {
 
 			setTimeout(() => {
 				user.banned = false;
-				this.spam[m.sender].count = 0;
+				delete this.spam[m.sender];
 
 				conn.sendMessage(m.chat, { react: { text: '✅', key: m.key } });
 			}, 10000);

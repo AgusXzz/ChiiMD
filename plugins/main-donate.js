@@ -34,7 +34,9 @@ const handler = async (m, { text }) => {
 	);
 
 	let status = '';
-	while (status !== 'completed') {
+	let attempts = 0;
+	while (status !== 'completed' && attempts < 60) {
+		attempts++;
 		if (new Date() >= expiredAt) {
 			await conn.sendMessage(m.chat, { delete: sQris.key });
 			return m.reply('⚠️ QRIS sudah *expired*, silakan buat ulang.');

@@ -5,6 +5,7 @@ const handler = async (m, { text, usedPrefix, command }) => {
 	if (!conn.deepseek) conn.deepseek = {};
 	if (!conn.deepseek[m.sender]) conn.deepseek[m.sender] = [];
 	conn.deepseek[m.sender].push({ role: 'user', content: input });
+	if (conn.deepseek[m.sender].length > 20) conn.deepseek[m.sender] = conn.deepseek[m.sender].slice(-20);
 
 	try {
 		const res = await deepinfra('deepseek-ai/DeepSeek-V3.2', conn.deepseek[m.sender]);

@@ -46,7 +46,7 @@ const handler = async function (m, { args }) {
 			return m.reply(`💪 ${t.name} +${t.unit}! (total bonus: ${user.statsBonus[stat]})\n-💹 ${fmt(t.cost)}`);
 		}
 		const list = Object.entries(TRAIN)
-			.map(([k, t]) => `• ${t.name} — 💹 ${fmt(t.cost)} (+${t.unit}) → .npc aldric ${k}`)
+			.map(([k, t]) => `• ${t.name} — 💹 ${fmt(t.cost)} (+${t.unit}) → .npc duncan ${k}`)
 			.join('\n');
 		const s = getStats(user);
 		return m.reply(`${npc.emoji} *${npc.name}*\n${npc.text}\n\n*Stat dasar:* ATK ${s.atk} | DEF ${s.def} | HP ${s.maxHp} | MP ${s.maxMana} | Crit ${s.crit}%\n\n${list}`);

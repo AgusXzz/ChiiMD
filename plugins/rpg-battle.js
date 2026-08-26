@@ -126,7 +126,8 @@ function winSolo(conn, m, user, state) {
 	user.kills++;
 	const loot = rollLoot(user, { boss: state.boss, dungeon: !!state.dungeon });
 	const traits = traitsOf(user);
-	const perk = guildPerk(user) * premiumPerk(user) * (activeBuff(user).xp ? 1 + activeBuff(user).xp.pct / 100 : 1);
+	const buff = activeBuff(user);
+	const perk = guildPerk(user) * premiumPerk(user) * (buff.xp ? 1 + buff.xp.pct / 100 : 1);
 	const goldMult = traits.has('goldFind') ? 1.2 : 1;
 	user.exp += Math.round((loot.exp + Math.round(loot.exp * (perk - 1))) * (traits.has('xpBoost') ? 1.2 : 1));
 	user.money += Math.round((loot.money + Math.round(loot.money * (perk - 1))) * goldMult);
@@ -282,7 +283,8 @@ async function partyAction(conn, m, user, state, command) {
 			questTrack(u, 'kills', 1);
 			storyKill(u, state.area?.id);
 			grantAchievements(u);
-			u.hp = Math.min(getStats(u).maxHp, u.hp + Math.round(getStats(u).maxHp * 0.2));
+			const s = getStats(u);
+			u.hp = Math.min(s.maxHp, u.hp + Math.round(s.maxHp * 0.2));
 			txt += `\n@${j.split('@')[0]}: ✨ +${exp} XP | 💹 +${fmt(money)}`;
 		}
 		txt += `\n\n${applyLoot(user, loot)}`;
@@ -392,12 +394,14 @@ function endDuel(conn, m, state, winner) {
 		txt += `\n💹 Menerima 💹 ${fmt(state.bet * 2)}`;
 	}
 	const traits = traitsOf(w);
+	const buff = activeBuff(w);
 	const loot = rollLoot(w, {});
-	w.exp += Math.round(loot.exp * premiumPerk(w) * (traits.has('xpBoost') ? 1.2 : 1) * (activeBuff(w).xp ? 1 + activeBuff(w).xp.pct / 100 : 1));
+	w.exp += Math.round(loot.exp * premiumPerk(w) * (traits.has('xpBoost') ? 1.2 : 1) * (buff.xp ? 1 + buff.xp.pct / 100 : 1));
 	w.money += Math.round(loot.money * (traits.has('goldFind') ? 1.2 : 1));
 	grantAchievements(w);
-	w.hp = getStats(w).maxHp;
-	w.mana = getStats(w).maxMana;
+	const stats = getStats(w);
+	w.hp = stats.maxHp;
+	w.mana = stats.maxMana;
 	conn.duels.delete(state.a);
 	conn.duels.delete(state.b);
 	return m.reply(txt);

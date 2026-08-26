@@ -4,8 +4,8 @@ const handler = async (m, { conn, text }) => {
 		await m.reply('⏳ Membuat brat video...');
 		const url = `https://skyzxu-brat.hf.space/brat-animated?text=${encodeURIComponent(text)}`;
 		await conn.sendSticker(m.chat, url, m, {
-			packname: stickpack,
-			author: stickauth,
+			packname: global.stickpack,
+			author: global.stickauth,
 		});
 	} catch (e) {
 		console.error(e);

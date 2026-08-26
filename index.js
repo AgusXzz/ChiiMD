@@ -31,13 +31,10 @@ function spawn(file) {
 		worker = null;
 		console.log('❗ Worker exited with code', code);
 		if (code !== 0) {
-			restartTimer = setTimeout(
-				() => {
-					console.log('⏳ Auto restart...');
-					spawn('main.js');
-				},
-				30 * 60 * 1000
-			);
+			restartTimer = setTimeout(() => {
+				console.log('⏳ Auto restart...');
+				spawn('main.js');
+			}, 60 * 1000);
 		}
 	});
 }
@@ -65,8 +62,15 @@ if (!rl.listenerCount('line')) {
 
 		if (cmd === 'exit') {
 			console.log('⛔ Exiting...');
-			worker?.terminate();
-			process.exit(0);
+			if (worker) {
+				worker.postMessage('shutdown');
+				setTimeout(() => {
+					worker?.terminate();
+					process.exit(0);
+				}, 3000);
+			} else {
+				process.exit(0);
+			}
 		}
 		if (cmd === 'restart' || cmd === 'reset') {
 			console.log('🍃Restart...');

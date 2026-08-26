@@ -9,17 +9,16 @@ global.namebot = 'ChiiBOT - MD';
 global.author = 'Agus';
 global.source = 'https://chat.whatsapp.com/LF76mRDRwLlI4pdbMi0d5A?mode=hqrc';
 
-global.wait = 'Loading...';
 global.eror = 'Terjadi Kesalahan...';
 
 global.pakasir = {
 	slug: 'kilersbotz',
-	apikey: process.env.PAKASIR_APIKEY || 'bWDO2M8GcfruzXscdKNQJC3vw8Y8PV13',
+	apikey: process.env.PAKASIR_APIKEY || '',
 	expired: 30, //1 = 1menit. 30 = 30menit
 };
 
 global.stickpack = 'Croted By';
-global.stickauth = namebot;
+global.stickauth = global.namebot;
 
 global.multiplier = 38; // The higher, The harder levelup
 

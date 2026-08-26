@@ -31,7 +31,7 @@ ${usedPrefix + command} demote @user`.trim(),
 			act = 'demote';
 			break;
 		default:
-			throw eror;
+			throw 'Aksi tidak valid. Gunakan: promote/demote';
 	}
 	if (act)
 		return conn.participantsUpdate({

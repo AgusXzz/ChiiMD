@@ -9,3 +9,6 @@ tmp
 backup
 .opencode
 recordings
+.env
+*.log
+.DS_Store

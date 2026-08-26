@@ -189,10 +189,11 @@ function drawImageAutoSize(doc, img) {
 async function toPDF(images, baseUrl, path) {
 	const doc = new PDFDocument({ autoFirstPage: false });
 	const buffers = [];
+	const MAX_PAGES = 50;
 
 	doc.on('data', (b) => buffers.push(b));
 
-	for (const imgName of images) {
+	for (const imgName of images.slice(0, MAX_PAGES)) {
 		if (/\.(webp|gif)$/i.test(imgName)) continue;
 		const img = await getBuffer(`${baseUrl}${path}${imgName}`);
 		drawImageAutoSize(doc, img);
