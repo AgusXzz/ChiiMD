@@ -2,7 +2,7 @@ import axios from 'axios';
 import FormData from 'form-data';
 import { delay } from 'baileys';
 
-const handler = async (m, { usedPrefix, command }) => {
+const handler = async (m, { conn, usedPrefix, command }) => {
 	const quoted = m.quoted ? m.quoted : m;
 	const mime = (quoted.msg || quoted).mimetype;
 	if (!/image/.test(mime)) throw `Kirim/Reply Foto Dengan Caption ${usedPrefix + command}`;

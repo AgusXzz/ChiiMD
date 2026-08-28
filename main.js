@@ -29,6 +29,7 @@ import useSQLiteAuthState from './lib/useSQLite.js';
 import { createStore } from './lib/database.js';
 import { expireMarket } from './lib/rpg.js';
 import { runBackup } from './lib/backup.js';
+import { sweep } from './lib/state.js';
 
 import { Browsers, fetchLatestWaWebVersion, makeCacheableSignalKeyStore } from 'baileys';
 
@@ -130,12 +131,15 @@ if (global.db) {
 	setInterval(() => {
 		if (global.db.data) global.db.flush?.();
 		expireMarket();
+		sweep();
+	}, 5000);
 
+	setInterval(() => {
 		if ((global.support || {}).find) {
 			const tmp = [tmpdir(), 'tmp'];
 			tmp.forEach((filename) => spawn('find', [filename, '-amin', '3', '-type', 'f', '-delete']));
 		}
-	}, 5000);
+	}, 60000).unref();
 
 	setInterval(runBackup, 6 * 3600 * 1000).unref();
 }
@@ -208,6 +212,7 @@ global.reloadHandler = async function (restatConn) {
 		conn.ev.off('message.delete', conn.onDelete);
 		conn.ev.off('connection.update', conn.connectionUpdate);
 		conn.ev.off('creds.update', conn.credsUpdate);
+		conn.ev.off('call', conn.callHandler);
 	}
 
 	conn.welcome =
@@ -225,8 +230,7 @@ global.reloadHandler = async function (restatConn) {
 	conn.onDelete = handler.deleteUpdate.bind(global.conn);
 	conn.connectionUpdate = connectionUpdate.bind(global.conn);
 	conn.credsUpdate = saveCreds.bind(global.conn);
-
-	conn.ev.on('call', async (calls) => {
+	conn.callHandler = async (calls) => {
 		for (const call of calls) {
 			const { id, from, status } = call;
 			const settings = global.db.data.settings[conn.user.jid];
@@ -235,7 +239,7 @@ global.reloadHandler = async function (restatConn) {
 				console.log('Menolak panggilan dari', from);
 			}
 		}
-	});
+	};
 
 	conn.ev.on('messages.upsert', conn.handler);
 	conn.ev.on('group-participants.update', conn.participantsUpdate);
@@ -243,6 +247,7 @@ global.reloadHandler = async function (restatConn) {
 	conn.ev.on('message.delete', conn.onDelete);
 	conn.ev.on('connection.update', conn.connectionUpdate);
 	conn.ev.on('creds.update', conn.credsUpdate);
+	conn.ev.on('call', conn.callHandler);
 	isInit = false;
 	return true;
 };

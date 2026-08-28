@@ -1,4 +1,4 @@
-const handler = async (m, { text, usedPrefix, command }) => {
+const handler = async (m, { conn, text, usedPrefix, command }) => {
 	const input = m.quoted ? m.quoted.text : text;
 	if (!input) throw `Masukkan pertanyaan atau perintah!\n\nContoh:\n${usedPrefix + command} apa itu AI`;
 

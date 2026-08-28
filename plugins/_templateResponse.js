@@ -3,7 +3,7 @@ import { proto, generateWAMessage, areJidsSameUser } from 'baileys';
 export async function all(m, chatUpdate) {
 	if (m.isBaileys) return;
 	if (!m.message) return;
-	if (!(m.message.buttonsResponseMessage || m.message.templateButtonReplyMessage || m.message.listResponseMessage || m.message.interactiveResponseMessage || m.message.pollUpdateMessage)) return;
+	if (!(m.message.buttonsResponseMessage || m.message.templateButtonReplyMessage || m.message.listResponseMessage || m.message.interactiveResponseMessage)) return;
 
 	const id =
 		m.mtype === 'conversation'

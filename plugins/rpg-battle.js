@@ -1,3 +1,4 @@
+import * as gameState from '../lib/state.js';
 import {
 	CLASSES,
 	getStats,
@@ -58,7 +59,7 @@ async function soloAction(conn, m, user, state, command) {
 
 	if (command === 'flee') {
 		if (Math.random() < 0.6) {
-			conn.battles.delete(key);
+			gameState.del('battle', key);
 			return m.reply('🏃 Kamu berhasil kabur!');
 		}
 		lines.push('🏃 Gagal kabur!');
@@ -121,7 +122,7 @@ async function soloAction(conn, m, user, state, command) {
 
 function winSolo(conn, m, user, state) {
 	const key = m.chat + ':' + m.sender;
-	conn.battles.delete(key);
+	gameState.del('battle', key);
 	user.wins++;
 	user.kills++;
 	const loot = rollLoot(user, { boss: state.boss, dungeon: !!state.dungeon });
@@ -167,7 +168,7 @@ function winSolo(conn, m, user, state) {
 
 function loseSolo(conn, m, user, state, lines) {
 	const key = m.chat + ':' + m.sender;
-	conn.battles.delete(key);
+	gameState.del('battle', key);
 	user.deaths++;
 	user.losses++;
 	const lose = Math.min(user.money, Math.round((10 + user.level * 3) * 0.5));
@@ -210,7 +211,7 @@ async function partyAction(conn, m, user, state, command) {
 
 	if (command === 'flee') {
 		if (Math.random() < 0.4) {
-			conn.battles.delete(key);
+			gameState.del('battle', key);
 			return m.reply('🏃 Party mundur dari pertempuran!');
 		}
 		lines.push('🏃 Gagal kabur!');
@@ -264,7 +265,7 @@ async function partyAction(conn, m, user, state, command) {
 	consumeTurns(aUser, 1);
 
 	if (monster.hp <= 0) {
-		conn.battles.delete(key);
+		gameState.del('battle', key);
 		const alive = state.members.filter((j) => (global.db.data.users[j].hp || 0) > 0);
 		const loot = rollLoot(user, {});
 		const exp = Math.round(loot.exp / alive.length);
@@ -291,7 +292,7 @@ async function partyAction(conn, m, user, state, command) {
 		return m.reply(txt);
 	}
 	if (state.members.every((j) => (global.db.data.users[j].hp || 0) <= 0)) {
-		conn.battles.delete(key);
+		gameState.del('battle', key);
 		for (const j of state.members) {
 			const u = global.db.data.users[j];
 			u.deaths++;
@@ -402,8 +403,9 @@ function endDuel(conn, m, state, winner) {
 	const stats = getStats(w);
 	w.hp = stats.maxHp;
 	w.mana = stats.maxMana;
-	conn.duels.delete(state.a);
-	conn.duels.delete(state.b);
+	gameState.del('duel', state.a);
+	gameState.del('duel', state.b);
+
 	return m.reply(txt);
 }
 
@@ -411,13 +413,14 @@ function endDuel(conn, m, state, winner) {
 
 const handler = async function (m, { command }) {
 	const user = global.db.data.users[m.sender];
-	const batt = this.battles || (this.battles = new Map());
 	const partyKey = m.chat + ':party';
-	if (batt.has(partyKey)) return partyAction(this, m, user, batt.get(partyKey), command);
-	const duel = (this.duels || (this.duels = new Map())).get(m.sender);
+	const partyState = gameState.get('battle', partyKey);
+	if (partyState) return partyAction(this, m, user, partyState, command);
+	const duel = gameState.get('duel', m.sender);
 	if (duel) return duelAction(this, m, user, duel, command);
 	const key = m.chat + ':' + m.sender;
-	if (batt.has(key)) return soloAction(this, m, user, batt.get(key), command);
+	const batt = gameState.get('battle', key);
+	if (batt) return soloAction(this, m, user, batt, command);
 	if (command === 'heal') return healOutside(this, m, user);
 	return m.reply('Kamu tidak sedang bertarung.');
 };

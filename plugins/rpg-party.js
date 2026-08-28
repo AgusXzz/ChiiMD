@@ -1,9 +1,9 @@
+import * as gameState from '../lib/state.js';
 import { areaById, pick, scaledMob, sendBtn, battleButtons, partyBattleText, BTN } from '../lib/rpg.js';
 
 const handler = async function (m, { args }) {
 	if (!m.isGroup) return m.reply('Party hanya bisa dibuat di grup.');
-	this.parties = this.parties || new Map();
-	const party = this.parties.get(m.chat);
+	const party = gameState.get('party', m.chat);
 	const user = global.db.data.users[m.sender];
 	const sub = (args[0] || '').toLowerCase();
 
@@ -21,7 +21,7 @@ const handler = async function (m, { args }) {
 
 	if (sub === 'create') {
 		if (party) return m.reply('Sudah ada party.');
-		this.parties.set(m.chat, { leader: m.sender, members: [m.sender] });
+		gameState.set('party', m.chat, { leader: m.sender, members: [m.sender] });
 		return m.reply('⚔️ Party dibuat! Anggota lain: .party join');
 	}
 
@@ -37,13 +37,13 @@ const handler = async function (m, { args }) {
 		if (!party || !party.members.includes(m.sender)) return m.reply('Kamu tidak di party.');
 		party.members = party.members.filter((x) => x !== m.sender);
 		if (party.leader === m.sender && party.members.length) party.leader = party.members[0];
-		if (!party.members.length) this.parties.delete(m.chat);
+		if (!party.members.length) gameState.del('party', m.chat);
 		return m.reply('Keluar dari party.');
 	}
 
 	if (sub === 'disband') {
 		if (!party || party.leader !== m.sender) return m.reply('Hanya leader.');
-		this.parties.delete(m.chat);
+		gameState.del('party', m.chat);
 		return m.reply('Party dibubarkan.');
 	}
 
@@ -51,16 +51,15 @@ const handler = async function (m, { args }) {
 		if (!party) return m.reply('Belum ada party.');
 		if (!party.members.includes(m.sender)) return m.reply('Kamu bukan member party.');
 		if (!user.class) return m.reply('Pilih kelas dulu: .kelas');
-		this.battles = this.battles || new Map();
-		if (this.battles.has(m.chat + ':party')) return m.reply('Party sedang bertarung.');
+		if (gameState.has('battle', m.chat + ':party')) return m.reply('Party sedang bertarung.');
 		const area = areaById(user.area);
 		const mob = scaledMob(pick(area.mobs), user.level + party.members.length * 2);
 		mob.hp = Math.round(mob.hp * (1 + (party.members.length - 1) * 0.8));
 		mob.exp = Math.round(mob.exp * (1 + (party.members.length - 1) * 0.5));
 		mob.money = Math.round(mob.money * (1 + (party.members.length - 1) * 0.5));
-		const state = { party: true, chat: m.chat, members: [...party.members], turn: 0, monster: mob, area, skillCd: 0, defending: false };
-		this.battles.set(m.chat + ':party', state);
-		return sendBtn(this, m, partyBattleText(state), battleButtons(state, user));
+		const pstate = { party: true, chat: m.chat, members: [...party.members], turn: 0, monster: mob, area, skillCd: 0, defending: false };
+		gameState.set('battle', m.chat + ':party', pstate);
+		return sendBtn(this, m, partyBattleText(pstate), battleButtons(pstate, user));
 	}
 
 	return m.reply('Sub-perintah: create/join/leave/disband/battle');

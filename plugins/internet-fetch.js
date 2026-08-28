@@ -28,13 +28,25 @@ const handler = async (m, { conn }) => {
 	const type = (res.headers.get('content-type') || '').split(';')[0];
 	const size = Number(res.headers.get('content-length') || 0);
 
-	if (size > 200 * 1024 * 1024) throw 'File terlalu besar (200MB)';
+	const MAX = 300 * 1024 * 1024;
+	if (size > MAX) throw 'File terlalu besar (300MB)';
 
 	const finalUrl = res.url || text;
 	const urlObj = new URL(finalUrl);
 	const filename = path.basename(urlObj.pathname) || 'file';
 
-	const buffer = Buffer.from(await res.arrayBuffer());
+	const chunks = [];
+	let total = 0;
+	const reader = res.body.getReader();
+	while (true) {
+		const { done, value } = await reader.read();
+		if (done) break;
+		total += value.length;
+		if (total > MAX) throw 'File terlalu besar (300MB)';
+		chunks.push(value);
+	}
+	reader.releaseLock();
+	const buffer = Buffer.concat(chunks);
 
 	if (type.startsWith('image/')) {
 		return conn.sendFile(m.chat, buffer, filename, text, m);

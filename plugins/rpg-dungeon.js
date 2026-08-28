@@ -1,3 +1,4 @@
+import * as gameState from '../lib/state.js';
 import { areaById, pick, scaledMob, bossFor, startBattle, onCooldown, cdMs, BOSS_TAUNT, sendBtn, BTN } from '../lib/rpg.js';
 
 const handler = async function (m, { command, args }) {
@@ -6,8 +7,7 @@ const handler = async function (m, { command, args }) {
 	const area = areaById(user.area);
 	if (user.level < area.min) return m.reply(`Level minimum untuk *${area.name}* adalah ${area.min}.`);
 	const key = m.chat + ':' + m.sender;
-	const batt = this.battles || (this.battles = new Map());
-	if (batt.has(key)) return m.reply('Kamu masih dalam battle.');
+	if (gameState.has('battle', key)) return m.reply('Kamu masih dalam battle.');
 	const go = (args[0] || '').toLowerCase() === 'y';
 
 	if (!go) {
